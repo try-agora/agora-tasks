@@ -1,0 +1,6 @@
+{
+  "description": "Unicode-incorrect normalization.",
+  "files": {
+    "src/recordkit/normalize.py": "def canonical(value):\n    return value.strip().lower()\n"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "description": "Case-sensitive header lookup that also accepts whitespace-only credentials.",
+  "files": {
+    "src/microapp/authentication.py": "from .middleware import middleware\nfrom .config import DEFAULTS\n\n@middleware(30)\nclass Authentication:\n    def handle(self, ctx, nxt):\n        if DEFAULTS[\"auth_required\"] and not any(\n            key == \"Authorization\" and value\n            for key, value in ctx.headers.items()\n        ):\n            ctx.response = (401, \"unauthorized\")\n        else:\n            nxt()\n"
+  }
+}

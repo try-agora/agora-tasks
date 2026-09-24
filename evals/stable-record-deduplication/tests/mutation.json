@@ -1,0 +1,6 @@
+{
+  "description": "ASCII-oriented lowercasing fails Unicode-equivalent keys.",
+  "files": {
+    "src/recordkit/normalize.py": "def canonical(value):\n    return value.strip().lower()\n"
+  }
+}

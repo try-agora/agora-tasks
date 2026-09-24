@@ -1,0 +1,32 @@
+schema_version = "1.3"
+source = "Adapted from agora-bench@7c1ba317267adf95dc13e043b73cca5daa43b48d:evals/pilot-rework2"
+artifacts = ["/app/src"]
+
+[task]
+name = "agora/download-filename-encoding"
+description = "Preserve Unicode filenames and quoted parameters while rejecting header injection."
+authors = [{ name = "Rakshith P" }]
+keywords = ["coding", "behavioral-verifier"]
+
+[metadata]
+difficulty = "medium"
+category = "software-engineering"
+fixture = "synthetic"
+version = "1.0.0"
+
+[agent]
+timeout_sec = 600
+user = "agent"
+
+[verifier]
+timeout_sec = 60
+user = "root"
+network_mode = "no-network"
+
+[environment]
+build_timeout_sec = 600
+cpus = 1
+memory_mb = 1024
+storage_mb = 2048
+network_mode = "no-network"
+workdir = "/app"

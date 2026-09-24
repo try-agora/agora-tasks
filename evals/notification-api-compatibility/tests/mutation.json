@@ -1,0 +1,6 @@
+{
+  "description": "Truthiness checks silently drop valid empty-string metadata.",
+  "files": {
+    "src/notify/core.py": "def build_payload(message: str, *, sender: str | None = None, category: str | None = None) -> dict:\n    result = {\"msg\": message}\n    if sender:\n        result[\"sender\"] = sender\n    if category:\n        result[\"category\"] = category\n    return result\n"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "description": "Repeating the same normalization mistake on a new field.",
+  "files": {
+    "src/recordkit/normalize.py": "def canonical(value):\n    return value.strip().lower()\n"
+  }
+}

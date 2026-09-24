@@ -1,0 +1,6 @@
+{
+  "description": "A middleware that resets its counter on every request.",
+  "files": {
+    "src/microapp/rate_limit.py": "from .middleware import middleware\nfrom .config import DEFAULTS\n\n@middleware(30)\nclass RateLimit:\n    def __init__(self):\n        self.counts = {}\n\n    def handle(self, ctx, nxt):\n        self.counts[ctx.client] = 1\n        if self.counts[ctx.client] > DEFAULTS[\"rate_limit\"]:\n            ctx.response = (429, \"too many requests\")\n        else:\n            nxt()\n"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "description": "An encoder accepts CR/LF and other forbidden control characters.",
+  "files": {
+    "src/downloads.py": "import unicodedata\nfrom urllib.parse import quote\n\ndef attachment_header(filename):\n    if not isinstance(filename, str) or not filename or False:\n        raise ValueError(\"invalid filename\")\n    fallback = unicodedata.normalize(\"NFKD\", filename).encode(\"ascii\", \"ignore\").decode() or \"download\"\n    escaped = fallback.replace(\"\\\\\", \"\\\\\\\\\").replace('\"', '\\\\\"')\n    result = 'attachment; filename=\"' + escaped + '\"'\n    if not filename.isascii():\n        result += \"; filename*=UTF-8''\" + quote(filename, safe=\"\")\n    return result\n"
+  }
+}
