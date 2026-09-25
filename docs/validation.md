@@ -35,7 +35,42 @@ Repeated model trials use the separate scorer rather than this unique-task contr
 
 ## Release execution record
 
-Validation is in progress. Final clean-snapshot checks will be recorded here before release.
+Validated on **2026-09-25** from a separate clean Git clone with a newly created
+virtual environment and `uv sync --locked`. Runtime: Python 3.12.12, Harbor 0.23.0,
+Docker 29.5.2, Linux ARM64 containers on Colima. No model calls or credentials were used.
+
+| Release check | Observed result |
+| --- | --- |
+| Task contracts, source witnesses, baseline/reference/mutation discrimination | 25 tasks, 27 stages, all 81 scenarios passed |
+| Harness regression tests | 13 test methods passed, including negative cases |
+| Native Docker Oracle | 25/25 tasks, 27/27 stages earned reward 1; zero infrastructure errors |
+| Native Docker no-op | 25/25 tasks, 27/27 stages earned reward 0; zero infrastructure errors |
+| Corrected codebase-memory-mcp startup on eShop | Reference passed; 1,582 nodes and 4,122 edges; intentional license exclusion accepted |
+| Authored harness/overlay Python lint | Passed with Ruff 0.15.7 |
+| Local documentation links and anchors | Passed |
+| Git packaging | Frozen source bytes match the clean checkout; jobs, environments, and credentials excluded |
+
+The task tree is Git object `1235fb6303aa596895a651c2db11f50b9710fa6c`.
+The code and inventory guard are committed at `b34582c`; subsequent release-record
+edits do not alter task or runtime code. Native control jobs are named `release-oracle`,
+`release-nop`, and `release-cbm-eshop`. They remain local under the ignored
+`build/release-bzwwl57j/repo/evals/jobs/` validation checkout. The table is a release
+record, not a bundled raw trace archive; the commands above reproduce these controls.
+
+Two packaging/environment issues were caught during preparation:
+
+- Git's default text normalization changed CRLF upstream package files. Fixture and
+  reference trees now preserve exact bytes through `.gitattributes`; the clean-clone
+  source-integrity and Sphinx checks passed after this correction.
+- The initial macOS temporary checkout was outside Colima's shared paths. Containers
+  could run but verifier logs were invisible on the host. That attempt was stopped
+  and retained as a host setup failure. The complete accepted runs used a shared
+  checkout path and absolute job paths, without changing task contracts.
+
+The original all-tool matrix covered ten synthetic tasks. This release reran the
+specific eShop startup regression, not all 125 task/tool combinations. Optional
+integration limits, including partial Sphinx parsing and Excalidraw exclusions, are
+explicit in the [overlay compatibility record](../overlays/README.md#compatibility-and-readiness).
 
 GitHub Actions runs the local suite and both Docker controls without model credentials.
 Hosted CI cannot be verified until the repository is uploaded; local checks do not imply

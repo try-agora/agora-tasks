@@ -32,7 +32,8 @@ Known limits of the pinned codebase-memory-mcp fast-mode integration:
 - Excalidraw excludes declaration source and truncates its exclusion list; readiness
   still rejects it. A useful graph alone is insufficient to satisfy this contract.
 - eShop, NestJS, Jellyfin, and LevelDB previously failed on license/author exclusions.
-  These exclusions are now permitted; historical failed jobs are not rescored.
+  These exclusions are now permitted; a fresh eShop reference run passed the corrected
+  startup path. Historical failed jobs are not rescored.
 
 Unsupported combinations stop before model execution. Task correctness and optional
 integration compatibility are reported independently. See [release checks](../docs/validation.md).
