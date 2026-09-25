@@ -27,6 +27,10 @@ and hosted CI. The [job checker](scripts/check_job.py) verifies complete task/st
 coverage instead of trusting an aggregate reward. Its regression test covers a real
 Harbor failure mode: a successful summary with a failed later stage.
 
+The [codebase-memory-mcp campaign](docs/campaign-n1-report.md) applies these checks
+to a full-suite, single-attempt run with Luna/low. It reports unsupported setups,
+incorrect answers, actual tool use, and reconciled usage without claiming a tool ranking.
+
 ## Run without a model
 
 Requires Python 3.12 or 3.13, [uv](https://docs.astral.sh/uv/), and Docker with

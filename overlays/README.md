@@ -31,6 +31,10 @@ Known limits of the pinned codebase-memory-mcp fast-mode integration:
 - Sphinx includes templates/TeX with partial parses; readiness still rejects it.
 - Excalidraw excludes declaration source and truncates its exclusion list; readiness
   still rejects it. A useful graph alone is insufficient to satisfy this contract.
+- The [25-task campaign](../docs/campaign-n1-report.md) additionally found partial
+  parses in Alamofire (18 files), Jellyfin (1), and both LevelDB fixtures (29 each).
+  Those attempts stopped before model execution; permitted notice exclusions alone
+  do not establish complete source coverage.
 - eShop, NestJS, Jellyfin, and LevelDB previously failed on license/author exclusions.
   These exclusions are now permitted; a fresh eShop reference run passed the corrected
   startup path. Historical failed jobs are not rescored.
