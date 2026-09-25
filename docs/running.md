@@ -4,6 +4,12 @@ Requirements: Python 3.12 or 3.13, uv, Docker with Compose and Buildx, and netwo
 initial dependency/image build. Synthetic tasks use the Python standard library; Django and Sphinx fixtures
 include their pinned runtime dependencies locally. Harbor is pinned in uv.lock; the Python base image is pinned by digest.
 
+On macOS with Colima or Docker Desktop, keep the checkout and job directory under
+paths shared with the Docker VM (usually your home directory). An unshared temporary
+directory can let a trial execute while hiding its bind-mounted verifier logs from the
+host, producing `RewardFileNotFoundError`. This is a host mount failure, not a task score.
+Use an absolute `--jobs-dir "$PWD/evals/jobs"` to avoid Compose's relative-copy warnings.
+
 ## Credential-free validation
 
 ```sh

@@ -2,3 +2,12 @@
 # Frozen upstream files include CRLF text and binary package data. Preserve bytes.
 evals/**/environment/workspace/** -text -whitespace
 evals/**/solution/src/** -text -whitespace
+# Keep upstream snapshots out of GitHub's authored-code language statistics.
+evals/django-*/environment/workspace/** linguist-vendored
+evals/sphinx-*/environment/workspace/** linguist-vendored
+evals/nestjs-*/environment/workspace/** linguist-vendored
+evals/leveldb-*/environment/workspace/** linguist-vendored
+evals/eshop-*/environment/workspace/** linguist-vendored
+evals/jellyfin-*/environment/workspace/** linguist-vendored
+evals/excalidraw-*/environment/workspace/** linguist-vendored
+evals/alamofire-*/environment/workspace/** linguist-vendored

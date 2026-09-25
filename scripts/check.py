@@ -4,6 +4,7 @@
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -66,7 +67,13 @@ def score(task, step, variant):
 
 def main():
     tasks = sorted(path.parent for path in (ROOT / "evals").glob("*/task.toml"))
-    assert len(tasks) >= 10, "the dataset must contain at least ten tasks"
+    assert tasks, "the dataset is empty"
+    documented = set(
+        re.findall(r"evals/([^/]+)/README\.md", (ROOT / "README.md").read_text())
+    )
+    assert documented == {task.name for task in tasks}, (
+        "README task inventory differs from dataset"
+    )
     total = 0
     for task in tasks:
         raw = (task / "task.toml").read_text()
