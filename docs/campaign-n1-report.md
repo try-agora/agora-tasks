@@ -83,4 +83,4 @@ Keep the baseline separate. CodeGraph was cancelled; GitNexus and Graphify were 
 | Environment | Linux ARM64; 1 CPU, 4 GiB; reset-aware indexing |
 | Run duration | 46.95 minutes |
 
-The [evidence data](campaign-n1-data.json) contains per-stage measurements, image digests, and hashes for the local native records. Raw traces remain local. The [protocol record](campaign-n1.md) documents the scope change.
+Per-trial traces remain local and are excluded from the repository.
