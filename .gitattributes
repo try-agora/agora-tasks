@@ -1,1 +1,4 @@
 * text=auto eol=lf
+# Frozen upstream files include CRLF text and binary package data. Preserve bytes.
+evals/**/environment/workspace/** -text -whitespace
+evals/**/solution/src/** -text -whitespace
