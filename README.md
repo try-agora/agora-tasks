@@ -28,8 +28,8 @@ coverage instead of trusting an aggregate reward. Its regression test covers a r
 Harbor failure mode: a successful summary with a failed later stage.
 
 The [codebase-memory-mcp campaign](docs/campaign-n1-report.md) applies these checks
-to a full-suite, single-attempt run with Luna/low. It reports unsupported setups,
-incorrect answers, actual tool use, and reconciled usage without claiming a tool ranking.
+to the completed n=1 pilot and specifies an n=3 follow-up with per-task pass rates
+and mean usage. It reports setup failures, correctness, and actual tool adoption.
 
 ## Run without a model
 

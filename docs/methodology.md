@@ -108,23 +108,10 @@ claiming a benefit. No model or tool ranking is published in this repository.
 
 Freeze these choices before a comparison; do not select settings after seeing rewards:
 
-1. Use one clean repository revision, the committed dependency locks, one host/architecture,
-   Harbor 0.23.0, Codex 0.144.3, Luna low, 1 CPU/4 GiB, and the same task timeouts.
-   Keep the shared adoption instruction fixed. Do not add skills/notes to only one arm.
-2. Freeze and declare the task subset before launch; run that same subset per arm with `overlays/smoke.yaml` and `StepIndexPlugin`.
-   Keep `n_concurrent_trials: 1`, no retries, fresh containers, and fresh conversations.
-   Run only one benchmark job at a time; do not change source or locks while it runs.
-3. Use five independent repetitions. Rotate arm order by one position each repetition:
-   baseline → CodeGraph → GitNexus → Graphify → codebase-memory-mcp, then CodeGraph first, etc.
-   Use distinct job names such as `measurement-r1-codegraph`. Keep failed attempts too.
-4. Run the saved-job checker for every arm and inspect MCP results, not only call status.
-   Provisioning/telemetry failures invalidate that attempt; they are not model failures
-   and must not be silently replaced. Correct-but-unused tools are adoption misses,
-   reported separately rather than counted as successful MCP measurements.
-5. Report completion counts first, then paired per-task token and agent-time differences,
-   medians and dispersion across repetitions, and the fixed completion-efficiency score.
-   Show installation/indexing, initial environment, and total trial times separately.
-   Include all stages and failed work; do not rank only a tool's successful subset.
+1. Freeze the revision, locks, host, model, runtime, timeouts, and shared instruction. Use the same settings across selected arms.
+2. Declare the task subset; use fresh containers and conversations, serial execution, and no retries. Keep every attempt.
+3. Run **three attempts per task** with unique job names. Check each saved job and inspect actual MCP results.
+4. Report pass rate over valid verdicts and arithmetic mean tokens/time over valid attempts, with denominators. Show setup failures separately; never impute or replace missing results.
 
 The existing smoke results are readiness evidence, not this repeated campaign. No full
 paid comparison is required merely to validate provisioning. Keep raw Harbor/ATIF/native
