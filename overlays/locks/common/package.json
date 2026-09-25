@@ -1,0 +1,5 @@
+{
+  "name": "agora-overlay-common",
+  "private": true,
+  "dependencies": {"@openai/codex": "0.144.3"}
+}

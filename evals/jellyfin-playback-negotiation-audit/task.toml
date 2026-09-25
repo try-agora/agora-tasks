@@ -1,0 +1,32 @@
+schema_version = "1.3"
+source = "Jellyfin@aefb9b2cffca3ccb7a95d89af0d9fb2040de6ed3; playback request and capability negotiation audit"
+artifacts = ["/app/src/playback-negotiation.json"]
+
+[task]
+name = "agora/jellyfin-playback-negotiation-audit"
+description = "Trace playback requests across user selection, dependency injection, media providers, bitrate policy, and stream negotiation."
+authors = [{ name = "Rakshith P" }]
+keywords = ["csharp", "jellyfin", "code-navigation", "dynamic-dispatch", "structured-artifact"]
+
+[metadata]
+difficulty = "hard"
+category = "software-engineering"
+fixture = "upstream-csharp-source"
+version = "1.0.1"
+
+[agent]
+timeout_sec = 1200
+user = "agent"
+
+[verifier]
+timeout_sec = 120
+user = "root"
+network_mode = "no-network"
+
+[environment]
+build_timeout_sec = 600
+cpus = 1
+memory_mb = 1024
+storage_mb = 2048
+network_mode = "no-network"
+workdir = "/app"

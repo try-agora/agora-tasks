@@ -1,0 +1,177 @@
+{
+  "events": {
+    "config-inited": [
+      {
+        "handler": "sphinx/builders/epub3.py:convert_epub_css_files",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/builders/html/__init__.py:convert_html_css_files",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/builders/html/__init__.py:convert_html_js_files",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/builders/html/__init__.py:validate_html_extra_path",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/builders/html/__init__.py:validate_html_static_path",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/builders/html/__init__.py:validate_html_logo",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/builders/html/__init__.py:validate_html_favicon",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/builders/html/__init__.py:error_on_html_4",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/builders/latex/__init__.py:validate_config_values",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/builders/latex/__init__.py:validate_latex_theme_options",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/builders/linkcheck.py:compile_linkcheck_allowed_redirects",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/config.py:convert_source_suffix",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/config.py:convert_highlight_options",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/config.py:init_numfig_format",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/config.py:correct_copyright_year",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/config.py:check_confval_types",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/config.py:check_primary_domain",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/extension.py:verify_needs_extensions",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/registry.py:merge_source_suffix",
+        "priority": 800
+      },
+      {
+        "handler": "sphinx/ext/intersphinx.py:normalize_intersphinx_mapping",
+        "priority": 800
+      }
+    ],
+    "builder-inited": [
+      {
+        "handler": "sphinx/builders/epub3.py:validate_config_values",
+        "priority": 500
+      },
+      {
+        "handler": "sphinx/builders/html/__init__.py:validate_math_renderer",
+        "priority": 500
+      },
+      {
+        "handler": "sphinx/builders/latex/__init__.py:install_packages_for_ja",
+        "priority": 500
+      },
+      {
+        "handler": "sphinx/domains/cpp.py:setup.initStuff",
+        "priority": 500
+      },
+      {
+        "handler": "sphinx/ext/autosummary/__init__.py:process_generate_options",
+        "priority": 500
+      },
+      {
+        "handler": "sphinx/ext/intersphinx.py:load_mappings",
+        "priority": 500
+      }
+    ],
+    "autodoc-process-docstring": [
+      {
+        "handler": "sphinx/ext/napoleon/__init__.py:_process_docstring",
+        "priority": 500
+      }
+    ],
+    "autodoc-process-signature": [
+      {
+        "handler": "sphinx/ext/autodoc/typehints.py:record_typehints",
+        "priority": 500
+      }
+    ],
+    "autodoc-before-process-signature": [
+      {
+        "handler": "sphinx/ext/autodoc/preserve_defaults.py:update_defvalue",
+        "priority": 500
+      },
+      {
+        "handler": "sphinx/ext/autodoc/type_comment.py:update_annotations_using_type_comments",
+        "priority": 500
+      }
+    ],
+    "doctree-read": [
+      {
+        "handler": "sphinx/environment/collectors/dependencies.py:DependenciesCollector.process_doc",
+        "priority": 500
+      },
+      {
+        "handler": "sphinx/environment/collectors/asset.py:ImageCollector.process_doc",
+        "priority": 500
+      },
+      {
+        "handler": "sphinx/environment/collectors/asset.py:DownloadFileCollector.process_doc",
+        "priority": 500
+      },
+      {
+        "handler": "sphinx/environment/collectors/metadata.py:MetadataCollector.process_doc",
+        "priority": 500
+      },
+      {
+        "handler": "sphinx/environment/collectors/title.py:TitleCollector.process_doc",
+        "priority": 500
+      },
+      {
+        "handler": "sphinx/environment/collectors/toctree.py:TocTreeCollector.process_doc",
+        "priority": 500
+      }
+    ],
+    "missing-reference": [
+      {
+        "handler": "sphinx/ext/intersphinx.py:missing_reference",
+        "priority": 500
+      },
+      {
+        "handler": "sphinx/domains/python.py:builtin_resolver",
+        "priority": 900
+      }
+    ],
+    "source-read": [
+      {
+        "handler": "sphinx/ext/intersphinx.py:install_dispatcher",
+        "priority": 500
+      }
+    ],
+    "env-before-read-docs": []
+  }
+}

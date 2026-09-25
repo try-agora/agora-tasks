@@ -1,0 +1,15 @@
+{
+  "repository": "https://github.com/excalidraw/excalidraw",
+  "ref": "v0.18.0",
+  "commit": "817d8c553c3389650f8b4503984a6d4a5d2f0c11",
+  "license": "MIT; workspace/src/excalidraw/LICENSE",
+  "selection": "All tracked TypeScript/TSX/JavaScript/JSX files under packages/ and excalidraw-app/, excluding test, tests, __tests__, __snapshots__, testdata directories and .test/.spec files; package.json and tsconfig*.json in those trees; root LICENSE, package.json, tsconfig.json. No downloaded dependencies, binary/static assets, generated graphs, or repository history. Source-audit fixture, not a complete browser-build distribution.",
+  "transformations": {
+    "description": "Only CRLF-to-LF and required final-newline normalization; all other source bytes preserved.",
+    "files": []
+  },
+  "files": 416,
+  "bytes": 4777938,
+  "source_sha256": "80b61d7c29ffe5630c93ed017bf8ac78232b5125814e4e9fa2cb250982a108c8",
+  "digest_algorithm": "SHA256 of each sorted src-relative path + NUL + raw SHA256(file bytes), concatenated."
+}

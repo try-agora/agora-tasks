@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/google/leveldb",
+  "ref": "1.23",
+  "commit": "99b3c03b3284f5886f9ef9a4ef703d57373e61be",
+  "license": "BSD-3-Clause; workspace/src/leveldb/LICENSE and AUTHORS",
+  "selection": "All tracked .cc, .h, and .c files, including public upstream tests, plus root LICENSE, AUTHORS, and CMakeLists.txt. No transformations, binaries, third-party submodules, generated graphs, or history. Source-audit fixture, not a complete CMake build distribution.",
+  "files": 135,
+  "source_sha256": "842bb415406dc53ffb8a3dd9f40498c29d7336f997e51d5ed635f926d29105d6",
+  "digest_algorithm": "SHA256 of each sorted src-relative path + NUL + raw SHA256(file bytes), concatenated."
+}

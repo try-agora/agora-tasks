@@ -1,0 +1,15 @@
+{
+  "repository": "https://github.com/Alamofire/Alamofire",
+  "ref": "5.10.2",
+  "commit": "513364f870f6bfc468f9d2ff0a95caccc10044c5",
+  "license": "MIT; workspace/src/alamofire/LICENSE and original Swift source headers",
+  "selection": "All tracked .swift files, including public tests/examples and package manifests, plus root LICENSE. No downloaded dependencies, binary assets, generated graphs, or history. Source-audit fixture, not a complete Xcode/build distribution.",
+  "transformations": {
+    "description": "Only CRLF-to-LF and required final-newline normalization; all other source bytes preserved.",
+    "files": []
+  },
+  "files": 93,
+  "bytes": 1662180,
+  "source_sha256": "04b5a7648230d26406920fc3eb1649c4e0d8bc748bd96d573d78be24d2d86984",
+  "digest_algorithm": "SHA256 of each sorted src-relative path + NUL + raw SHA256(file bytes), concatenated."
+}

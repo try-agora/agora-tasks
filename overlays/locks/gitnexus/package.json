@@ -1,0 +1,5 @@
+{
+  "name": "agora-overlay-gitnexus",
+  "private": true,
+  "dependencies": {"gitnexus": "1.6.9"}
+}

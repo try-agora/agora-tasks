@@ -1,0 +1,37 @@
+{
+  "locations": {
+    "user_claim": {"file":"jellyfin/Jellyfin.Api/Extensions/ClaimsPrincipalExtensions.cs","symbol":"ClaimsPrincipalExtensions.GetUserId","line":20},
+    "user_boundary": {"file":"jellyfin/Jellyfin.Api/Helpers/RequestHelpers.cs","symbol":"RequestHelpers.GetUserId","line":78},
+    "device_profile": {"file":"jellyfin/Jellyfin.Api/Controllers/MediaInfoController.cs","symbol":"MediaInfoController.GetPostedPlaybackInfo","line":142},
+    "manager_binding": {"file":"jellyfin/Emby.Server.Implementations/ApplicationHost.cs","symbol":"ApplicationHost.RegisterServices","line":522},
+    "provider_registration": {"file":"jellyfin/Emby.Server.Implementations/ApplicationHost.cs","symbol":"ApplicationHost.FindParts","line":679},
+    "source_fetch": {"file":"jellyfin/Jellyfin.Api/Helpers/MediaInfoHelper.cs","symbol":"MediaInfoHelper.GetPlaybackInfo","line":97},
+    "provider_fanout": {"file":"jellyfin/Emby.Server.Implementations/Library/MediaSourceManager.cs","symbol":"MediaSourceManager.GetDynamicMediaSources","line":280},
+    "provider_dispatch": {"file":"jellyfin/Emby.Server.Implementations/Library/MediaSourceManager.cs","symbol":"MediaSourceManager.GetDynamicMediaSources","line":289},
+    "channel_branch": {"file":"jellyfin/src/Jellyfin.LiveTv/Channels/ChannelDynamicMediaSourceProvider.cs","symbol":"ChannelDynamicMediaSourceProvider.GetMediaSources","line":32},
+    "source_copy": {"file":"jellyfin/Jellyfin.Api/Helpers/MediaInfoHelper.cs","symbol":"MediaInfoHelper.GetPlaybackInfo","line":127},
+    "remote_cap": {"file":"jellyfin/Jellyfin.Api/Helpers/MediaInfoHelper.cs","symbol":"MediaInfoHelper.GetMaxBitrate","line":505},
+    "stream_dispatch": {"file":"jellyfin/Jellyfin.Api/Helpers/MediaInfoHelper.cs","symbol":"MediaInfoHelper.SetDeviceSpecificData","line":247},
+    "video_candidate": {"file":"jellyfin/MediaBrowser.Model/Dlna/StreamBuilder.cs","symbol":"StreamBuilder.GetOptimalVideoStream","line":241},
+    "video_eligibility": {"file":"jellyfin/MediaBrowser.Model/Dlna/StreamBuilder.cs","symbol":"StreamBuilder.BuildVideoItem","line":680},
+    "streaming_default": {"file":"jellyfin/MediaBrowser.Model/Dlna/MediaOptions.cs","symbol":"MediaOptions.GetMaxBitrate","line":142},
+    "response_order": {"file":"jellyfin/Jellyfin.Api/Helpers/MediaInfoHelper.cs","symbol":"MediaInfoHelper.SortMediaSources","line":351},
+    "auto_open_guard": {"file":"jellyfin/Jellyfin.Api/Controllers/MediaInfoController.cs","symbol":"MediaInfoController.GetPostedPlaybackInfo","line":223}
+  },
+  "decisions": {
+    "query_overrides_body": true,
+    "missing_profile_uses_device_capabilities": true,
+    "source_filter_case_sensitive": false,
+    "auto_open_selection_case_sensitive": true,
+    "providers_awaited_together": true,
+    "provider_exception_result": "empty_sources",
+    "device_mutations_touch_manager_objects": false,
+    "remote_effective_bitrate": 8000000,
+    "local_effective_bitrate": 12000000,
+    "force_direct_play_bypasses_bitrate_gate": true,
+    "video_copy_disabled_clears_direct_stream": true,
+    "auto_open_default": false,
+    "non_channel_provider_result": "empty_sources",
+    "no_sources_error": "NoCompatibleStream"
+  }
+}

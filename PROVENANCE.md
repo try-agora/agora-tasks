@@ -18,5 +18,39 @@ and behavioral verifiers. Historical benchmark results do not transfer to these 
 The directory presentation follows the public
 [Harbor cookbook](https://github.com/harbor-framework/harbor-cookbook)
 inspected at commit `e093c9a`. No cookbook task code is copied.
-All fixtures are synthetic; there is no production data, user transcript, credential,
-internal corpus snapshot, or copied third-party benchmark solution.
+The original ten fixtures are synthetic and contain no production data, user
+transcript, credential, or internal corpus snapshot. The upstream expansion below
+has separate source and reference-solution attribution.
+
+## Upstream-source expansion
+
+The ten tasks above are synthetic. The fifteen tasks below contain third-party
+source; they do **not** inherit the repository's MIT license. Original copyright
+and license notices are preserved alongside the source. Each linked manifest
+records exact revisions, selection rules, hashes where available, and transformations.
+Task READMEs distinguish source subsets from complete upstream distributions.
+
+| Upstream | Tasks | Source and notices |
+| --- | --- | --- |
+| Django | multi-parent update, upsert column mapping, query execution map, HMAC impact inventory, lookup hierarchy audit, utility fan-in ranking | Each `django-*` task has `environment/SOURCES.json`; Django `9ffd4eae2ce7a7100c98f681e2b6ab818df384a4`, `workspace/src/LICENSE-Django`; asgiref/sqlparse notices under `workspace/vendor/` (BSD-3-Clause) |
+| Sphinx | prolog document titles, extension event routing | [Manifest](evals/sphinx-prolog-document-titles/environment/SOURCES.json); Sphinx `71db08c05197545944949d5aa76cd340e7143627`, `workspace/src/LICENSE-Sphinx` (BSD); twenty vendored dependencies retain their separate licenses under `workspace/vendor/*.dist-info/` |
+| NestJS | HTTP lifecycle audit | [Manifest](evals/nestjs-http-lifecycle-audit/environment/SOURCES.json); `workspace/src/LICENSE` (MIT) |
+| LevelDB | write-path audit, read-cache audit | [Manifest](evals/leveldb-write-path-audit/environment/SOURCES.json); `workspace/src/leveldb/LICENSE` and `AUTHORS` (BSD-3-Clause) |
+| eShopOnWeb | order lifecycle audit | [Manifest](evals/eshop-order-lifecycle-audit/environment/SOURCES.json); `workspace/src/eshop/LICENSE` (MIT) |
+| Jellyfin | playback negotiation audit | [Manifest](evals/jellyfin-playback-negotiation-audit/environment/SOURCES.json); `workspace/src/jellyfin/LICENSE` (GPL v2) and original source notices |
+| Excalidraw | render invalidation audit | [Manifest](evals/excalidraw-render-invalidation-audit/environment/SOURCES.json); `workspace/src/excalidraw/LICENSE` (MIT) |
+| Alamofire | deferred validation audit | [Manifest](evals/alamofire-deferred-validation-audit/environment/SOURCES.json); `workspace/src/alamofire/LICENSE` (MIT) and original source headers |
+
+The Django multi-parent reference contains upstream repaired library files; its
+[README](evals/django-multi-parent-update/README.md#provenance-and-scope) credits
+the upstream commit and author. The upsert reference adapts the upstream repair,
+as documented in its [README](evals/django-upsert-column-mapping/README.md#source-and-hypothesis).
+The Sphinx repair adapts the public issue using Docutils' field grammar. These are
+attributed reference solutions, not claims that the upstream fixes were authored here.
+Independent behavior checks and task packaging are the evaluation contribution.
+None of these adaptations is an official SWE-bench harness or score.
+
+Source-audit expected artifacts are bounded, task-authored witnesses checked against
+pinned source; they are not exported tool graphs. Public code and historical fixes
+may have appeared in training data. Historical tool experiments do not transfer to
+new task versions or establish uncontaminated reasoning.

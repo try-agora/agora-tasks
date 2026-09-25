@@ -1,0 +1,42 @@
+{
+  "locations": {
+    "mutation_gate": {"file": "excalidraw/packages/excalidraw/element/mutateElement.ts", "symbol": "mutateElement"},
+    "scene_dispatch": {"file": "excalidraw/packages/excalidraw/scene/Scene.ts", "symbol": "Scene.triggerUpdate"},
+    "observer_registration": {"file": "excalidraw/packages/excalidraw/components/App.tsx", "symbol": "App.componentDidMount"},
+    "react_handoff": {"file": "excalidraw/packages/excalidraw/components/App.tsx", "symbol": "App.triggerRender"},
+    "render_selection": {"file": "excalidraw/packages/excalidraw/components/App.tsx", "symbol": "App.render"},
+    "renderable_cache": {"file": "excalidraw/packages/excalidraw/scene/Renderer.ts", "symbol": "Renderer.getRenderableElements"},
+    "static_memo": {"file": "excalidraw/packages/excalidraw/components/canvases/StaticCanvas.tsx", "symbol": "areEqual"},
+    "canvas_effect": {"file": "excalidraw/packages/excalidraw/components/canvases/StaticCanvas.tsx", "symbol": "StaticCanvas"},
+    "static_dispatch": {"file": "excalidraw/packages/excalidraw/renderer/staticScene.ts", "symbol": "renderStaticScene"},
+    "frame_coalescing": {"file": "excalidraw/packages/excalidraw/utils.ts", "symbol": "throttleRAF"},
+    "paint": {"file": "excalidraw/packages/excalidraw/renderer/staticScene.ts", "symbol": "_renderStaticScene"},
+    "shape_generation": {"file": "excalidraw/packages/excalidraw/scene/ShapeCache.ts", "symbol": "ShapeCache.generateElementShape"},
+    "cache_cleanup": {"file": "excalidraw/packages/excalidraw/scene/Renderer.ts", "symbol": "Renderer.destroy"}
+  },
+  "decisions": {
+    "no_op_notifies": false,
+    "suppressed_notification_bumps_version": true,
+    "suppressed_notification_invalidates_shape": true,
+    "x_only_invalidates_shape": false,
+    "listener_added_during_dispatch_runs_now": false,
+    "listener_removed_during_dispatch_still_runs": true,
+    "duplicate_registration_throws": true,
+    "scene_to_app_handoff": "registered_callback",
+    "app_to_render_handoff": "react_state_update",
+    "default_app_callback_notifies_scene_again": false,
+    "force_render_regenerates_scene_nonce": true,
+    "changed_nonce_invalidates_renderer_cache": true,
+    "changed_nonce_skips_static_canvas": false,
+    "unchanged_dimensions_reset_canvas": false,
+    "render_throttling_default": false,
+    "react17_flag_enables_throttling": false,
+    "react18_flag_enables_throttling": true,
+    "raf_three_queued_arguments": ["first", "third"],
+    "export_reuses_shape": false,
+    "null_shape_is_cache_hit": true,
+    "shape_generation_clears_element_canvas_cache": true,
+    "new_element_painted_on_static_canvas": false,
+    "bound_text_painted_with_container": true
+  }
+}

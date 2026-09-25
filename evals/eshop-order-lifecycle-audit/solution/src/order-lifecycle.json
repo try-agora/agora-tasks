@@ -1,0 +1,39 @@
+{
+  "locations": {
+    "checkout_quantities": {"file":"eshop/src/Web/Pages/Basket/Checkout.cshtml.cs","symbol":"CheckoutModel.OnPost"},
+    "checkout_order": {"file":"eshop/src/Web/Pages/Basket/Checkout.cshtml.cs","symbol":"CheckoutModel.OnPost"},
+    "checkout_delete": {"file":"eshop/src/Web/Pages/Basket/Checkout.cshtml.cs","symbol":"CheckoutModel.OnPost"},
+    "quantity_write": {"file":"eshop/src/ApplicationCore/Entities/BasketAggregate/BasketItem.cs","symbol":"BasketItem.SetQuantity"},
+    "remove_empty": {"file":"eshop/src/ApplicationCore/Entities/BasketAggregate/Basket.cs","symbol":"Basket.RemoveEmptyItems"},
+    "empty_guard": {"file":"eshop/src/ApplicationCore/Extensions/GuardExtensions.cs","symbol":"BasketGuards.EmptyBasketOnCheckout"},
+    "catalog_snapshot": {"file":"eshop/src/ApplicationCore/Services/OrderService.cs","symbol":"OrderService.CreateOrderAsync"},
+    "order_line": {"file":"eshop/src/ApplicationCore/Services/OrderService.cs","symbol":"OrderService.CreateOrderAsync"},
+    "order_store": {"file":"eshop/src/ApplicationCore/Services/OrderService.cs","symbol":"OrderService.CreateOrderAsync"},
+    "total_accumulation": {"file":"eshop/src/ApplicationCore/Entities/OrderAggregate/Order.cs","symbol":"Order.Total"},
+    "repository_binding": {"file":"eshop/src/Web/Configuration/ConfigureCoreServices.cs","symbol":"ConfigureCoreServices.AddCoreServices"},
+    "order_service_binding": {"file":"eshop/src/Web/Configuration/ConfigureCoreServices.cs","symbol":"ConfigureCoreServices.AddCoreServices"},
+    "mediator_registration": {"file":"eshop/src/Web/Configuration/ConfigureWebServices.cs","symbol":"ConfigureWebServices.AddWebServices"},
+    "detail_dispatch": {"file":"eshop/src/Web/Controllers/OrderController.cs","symbol":"OrderController.Detail"},
+    "detail_lookup": {"file":"eshop/src/Web/Features/OrderDetails/GetOrderDetailsHandler.cs","symbol":"GetOrderDetailsHandler.Handle"},
+    "detail_predicate": {"file":"eshop/src/ApplicationCore/Specifications/OrderWithItemsByIdSpec.cs","symbol":"OrderWithItemsByIdSpec.OrderWithItemsByIdSpec"},
+    "list_lookup": {"file":"eshop/src/Web/Features/MyOrders/GetMyOrdersHandler.cs","symbol":"GetMyOrdersHandler.Handle"},
+    "list_predicate": {"file":"eshop/src/ApplicationCore/Specifications/CustomerOrdersSpecification.cs","symbol":"CustomerOrdersSpecification.CustomerOrdersSpecification"}
+  },
+  "decisions": {
+    "checkout_call_order": ["set_quantities", "create_order", "delete_basket"],
+    "quantity_guard_minimum": 0,
+    "zero_quantity_removed": true,
+    "unit_price_origin": "basket",
+    "display_fields_origin": "catalog_snapshot",
+    "total_uses_order_lines": true,
+    "adding_existing_item_reprices": false,
+    "detail_handler_uses_username": false,
+    "list_spec_filters_buyer": true,
+    "detail_spec_filters_buyer": false,
+    "missing_detail_response": "BadRequest",
+    "empty_checkout_redirect": "/Basket/Index",
+    "delete_after_create_throws": false,
+    "order_service_lifetime": "scoped",
+    "explicit_checkout_transaction": false
+  }
+}

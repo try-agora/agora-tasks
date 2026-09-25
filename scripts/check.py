@@ -20,6 +20,11 @@ def score(task, step, variant):
         workspace = Path(directory) / "workspace"
         logs = Path(directory) / "logs"
         shutil.copytree(task / "environment/workspace", workspace)
+        # Match Harbor: base tests first, then the step-specific overlay.
+        tests = Path(directory) / "tests"
+        if (task / "tests").is_dir():
+            shutil.copytree(task / "tests", tests)
+        shutil.copytree(step / "tests", tests, dirs_exist_ok=True)
         if variant != "baseline":
             shutil.copytree(
                 step / "solution/src", workspace / "src", dirs_exist_ok=True
@@ -33,7 +38,7 @@ def score(task, step, variant):
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_text(body)
         result = subprocess.run(
-            [sys.executable, "-I", "-B", str(step / "tests/test_behavior.py")],
+            [sys.executable, "-I", "-B", str(tests / "test_behavior.py")],
             cwd=workspace,
             env={
                 **os.environ,

@@ -11,7 +11,7 @@ uv run harbor run -p evals/cross-session-framework-reuse -a oracle --env docker 
 ```
 
 This credential-free command checks the reference solution. See [running an agent](../../docs/running.md)
-for model-backed trials and [tool integrations](../../tools/README.md) for independent tool selection.
+for model-backed trials and [tool integrations](../../overlays/README.md) for independent tool selection.
 
 ## Contract
 
@@ -23,6 +23,10 @@ the original fixture. Source edits and workspace notes disappear; state outside
 `/app` survives inside this trial. `/memory` is reserved for optional tool state.
 Do not enable trajectory resumption when measuring cross-session reuse.
 Both steps always run; each receives a binary score and the trial reports their mean.
+This is a re-learning efficiency control: memory is optional, and correctness alone
+does not establish retention. The second step remains solvable from its instruction
+and the baseline source. Compare no-tool, plain-notes, and memory-tool arms with the
+[completion/efficiency score](../../docs/methodology.md#completion-and-efficiency-reward).
 
 ## Verification
 
@@ -41,9 +45,19 @@ cross-session-framework-reuse/
 ├── README.md
 ├── task.toml
 ├── environment/                 # Dockerfile, reset, and frozen source
+├── tests/
+│   └── helpers.py               # shared behavioral grading/output
 └── steps/
-    ├── rate-limit/              # instruction, tests, reference solution
-    └── authenticate/              # plus workspace reset
+    ├── rate-limit/
+    │   ├── instruction.md
+    │   ├── tests/               # test.sh, test_behavior.py, mutation.json
+    │   └── solution/            # solve.sh and reference source
+    └── authenticate/
+        ├── instruction.md
+        ├── tests/
+        ├── solution/
+        └── workdir/
+            └── setup.sh        # restore /app before the fresh conversation
 ```
 
 ## Provenance and limits

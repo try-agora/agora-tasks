@@ -1,0 +1,34 @@
+{
+  "selection": "Copy every .py file (and py.typed, where present) within the named package, preserving relative paths and exact bytes. Copy each distribution's LICENSE alongside it. Exclude non-Python resources, upstream tests, docs, and git history.",
+  "components": [
+    {
+      "name": "Django",
+      "commit": "9ffd4eae2ce7a7100c98f681e2b6ab818df384a4",
+      "archive": "https://codeload.github.com/django/django/tar.gz/9ffd4eae2ce7a7100c98f681e2b6ab818df384a4",
+      "sha256": "7b619a001e9598fc7992bf76ca891e9868d9b36398a0c6c26671c08f53d72de9",
+      "package": "django",
+      "destination": "workspace/src/django",
+      "license": "workspace/src/LICENSE-Django",
+      "python_files": 863,
+      "python_lines": 146717
+    },
+    {
+      "name": "asgiref",
+      "version": "3.8.1",
+      "archive": "https://files.pythonhosted.org/packages/29/38/b3395cc9ad1b56d2ddac9970bc8f4141312dbaec28bc7c218b0dfafd0f42/asgiref-3.8.1.tar.gz",
+      "sha256": "c343bd80a0bec947a9860adb4c432ffa7db769836c64238fc34bdc3fec84d590",
+      "package": "asgiref",
+      "destination": "workspace/vendor/asgiref",
+      "license": "workspace/vendor/LICENSE-asgiref"
+    },
+    {
+      "name": "sqlparse",
+      "version": "0.5.3",
+      "archive": "https://files.pythonhosted.org/packages/e5/40/edede8dd6977b0d3da179a342c198ed100dd2aba4be081861ee5911e4da4/sqlparse-0.5.3.tar.gz",
+      "sha256": "09f67787f56a0b16ecdbde1bfc7f5d9c3371ca683cfeaa8e6ff60b4807ec9272",
+      "package": "sqlparse",
+      "destination": "workspace/vendor/sqlparse",
+      "license": "workspace/vendor/LICENSE-sqlparse"
+    }
+  ]
+}

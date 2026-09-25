@@ -1,0 +1,205 @@
+{
+  "selection": "Complete Sphinx package and LICENSE from the pinned archive; no upstream tests, docs or git history. Runtime dependency package data and dist-info from exactly versioned wheels, installed by uv 0.9.30. Exclude generated bin entrypoints, bytecode and optional native .so/.dylib accelerators; pure-Python fallbacks are used on every platform. Preserve all retained bytes including binary locale tables, translations and images.",
+  "sphinx": {
+    "commit": "71db08c05197545944949d5aa76cd340e7143627",
+    "archive": "https://codeload.github.com/sphinx-doc/sphinx/tar.gz/71db08c05197545944949d5aa76cd340e7143627",
+    "sha256": "d1075bd7e25bcc607d20696ba41408c7ebb12748190e07f8234cfd3982e4ad1d",
+    "python_files": 170,
+    "destination": "workspace/src/sphinx",
+    "license": "workspace/src/LICENSE-Sphinx"
+  },
+  "dependencies": [
+    {
+      "name": "alabaster",
+      "version": "0.7.16",
+      "wheel": "https://files.pythonhosted.org/packages/32/34/d4e1c02d3bee589efb5dfa17f88ea08bdb3e3eac12bc475462aec52ed223/alabaster-0.7.16-py3-none-any.whl",
+      "sha256": "b46733c07dce03ae4e150330b975c75737fa60f0a7c591b6c8bf4928a28e2c92",
+      "license_files": [
+        "LICENSE.rst"
+      ]
+    },
+    {
+      "name": "babel",
+      "version": "2.17.0",
+      "wheel": "https://files.pythonhosted.org/packages/b7/b8/3fe70c75fe32afc4bb507f75563d39bc5642255d1d94f1f23604725780bf/babel-2.17.0-py3-none-any.whl",
+      "sha256": "4d0b53093fdfb4b21c92b5213dba5a1b23885afa8383709427046b21c366e5f2",
+      "license_files": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "certifi",
+      "version": "2025.6.15",
+      "wheel": "https://files.pythonhosted.org/packages/84/ae/320161bd181fc06471eed047ecce67b693fd7515b16d495d8932db763426/certifi-2025.6.15-py3-none-any.whl",
+      "sha256": "2e0c7ce7cb5d8f8634ca55d2ba7e6ec2689a2fd6537d8dec1296a477a4910057",
+      "license_files": [
+        "licenses",
+        "licenses/LICENSE"
+      ]
+    },
+    {
+      "name": "charset-normalizer",
+      "version": "3.4.2",
+      "wheel": "https://files.pythonhosted.org/packages/d7/a4/37f4d6035c89cac7930395a35cc0f1b872e652eaafb76a6075943754f095/charset_normalizer-3.4.2-cp312-cp312-macosx_10_13_universal2.whl",
+      "sha256": "0c29de6a1a95f24b9a1aa7aefd27d2487263f00dfd55a77719b530788f75cff7",
+      "license_files": [
+        "licenses",
+        "licenses/LICENSE"
+      ]
+    },
+    {
+      "name": "docutils",
+      "version": "0.20.1",
+      "wheel": "https://files.pythonhosted.org/packages/26/87/f238c0670b94533ac0353a4e2a1a771a0cc73277b88bff23d3ae35a256c1/docutils-0.20.1-py3-none-any.whl",
+      "sha256": "96f387a2c5562db4476f09f13bbab2192e764cac08ebbf3a34a95d9b1e4a59d6",
+      "license_files": [
+        "COPYING.txt"
+      ]
+    },
+    {
+      "name": "idna",
+      "version": "3.10",
+      "wheel": "https://files.pythonhosted.org/packages/76/c6/c88e154df9c4e1a2a66ccf0005a88dfb2650c1dffb6f5ce603dfbd452ce3/idna-3.10-py3-none-any.whl",
+      "sha256": "946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3",
+      "license_files": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "name": "imagesize",
+      "version": "1.4.1",
+      "wheel": "https://files.pythonhosted.org/packages/ff/62/85c4c919272577931d407be5ba5d71c20f0b616d31a0befe0ae45bb79abd/imagesize-1.4.1-py2.py3-none-any.whl",
+      "sha256": "0d8d18d08f840c19d0ee7ca1fd82490fdc3729b7ac93f49870406ddde8ef8d8b",
+      "license_files": [
+        "LICENSE.rst"
+      ]
+    },
+    {
+      "name": "Jinja2",
+      "version": "3.1.6",
+      "wheel": "https://files.pythonhosted.org/packages/62/a1/3d680cbfd5f4b8f15abc1d571870c5fc3e594bb582bc3b64ea099db13e56/jinja2-3.1.6-py3-none-any.whl",
+      "sha256": "85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67",
+      "license_files": [
+        "licenses",
+        "licenses/LICENSE.txt"
+      ]
+    },
+    {
+      "name": "MarkupSafe",
+      "version": "2.1.5",
+      "wheel": "https://files.pythonhosted.org/packages/53/bd/583bf3e4c8d6a321938c13f49d44024dbe5ed63e0a7ba127e454a66da974/MarkupSafe-2.1.5-cp312-cp312-macosx_10_9_universal2.whl",
+      "sha256": "8dec4936e9c3100156f8a2dc89c4b88d5c435175ff03413b443469c7c8c5f4d1",
+      "license_files": [
+        "LICENSE.rst"
+      ]
+    },
+    {
+      "name": "packaging",
+      "version": "25.0",
+      "wheel": "https://files.pythonhosted.org/packages/20/12/38679034af332785aac8774540895e234f4d07f7545804097de4b666afd8/packaging-25.0-py3-none-any.whl",
+      "sha256": "29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484",
+      "license_files": [
+        "licenses",
+        "licenses/LICENSE",
+        "licenses/LICENSE.APACHE",
+        "licenses/LICENSE.BSD"
+      ]
+    },
+    {
+      "name": "Pygments",
+      "version": "2.19.2",
+      "wheel": "https://files.pythonhosted.org/packages/c7/21/705964c7812476f378728bdf590ca4b771ec72385c533964653c68e86bdc/pygments-2.19.2-py3-none-any.whl",
+      "sha256": "86540386c03d588bb81d44bc3928634ff26449851e99741617ecb9037ee5ec0b",
+      "license_files": [
+        "licenses",
+        "licenses/AUTHORS",
+        "licenses/LICENSE"
+      ]
+    },
+    {
+      "name": "requests",
+      "version": "2.32.4",
+      "wheel": "https://files.pythonhosted.org/packages/7c/e4/56027c4a6b4ae70ca9de302488c5ca95ad4a39e190093d6c1a8ace08341b/requests-2.32.4-py3-none-any.whl",
+      "sha256": "27babd3cda2a6d50b30443204ee89830707d396671944c998b5975b031ac2b2c",
+      "license_files": [
+        "licenses",
+        "licenses/LICENSE"
+      ]
+    },
+    {
+      "name": "snowballstemmer",
+      "version": "2.2.0",
+      "wheel": "https://files.pythonhosted.org/packages/ed/dc/c02e01294f7265e63a7315fe086dd1df7dacb9f840a804da846b96d01b96/snowballstemmer-2.2.0-py2.py3-none-any.whl",
+      "sha256": "c8e1716e83cc398ae16824e5572ae04e0d9fc2c6b985fb0f900f5f0c96ecba1a",
+      "license_files": [
+        "COPYING"
+      ]
+    },
+    {
+      "name": "sphinxcontrib-applehelp",
+      "version": "1.0.4",
+      "wheel": "https://files.pythonhosted.org/packages/06/c1/5e2cafbd03105ce50d8500f9b4e8a6e8d02e22d0475b574c3b3e9451a15f/sphinxcontrib_applehelp-1.0.4-py3-none-any.whl",
+      "sha256": "29d341f67fb0f6f586b23ad80e072c8e6ad0b48417db2bde114a4c9746feb228",
+      "license_files": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "sphinxcontrib-devhelp",
+      "version": "1.0.2",
+      "wheel": "https://files.pythonhosted.org/packages/c5/09/5de5ed43a521387f18bdf5f5af31d099605c992fd25372b2b9b825ce48ee/sphinxcontrib_devhelp-1.0.2-py2.py3-none-any.whl",
+      "sha256": "8165223f9a335cc1af7ffe1ed31d2871f325254c0423bc0c4c7cd1c1e4734a2e",
+      "license_files": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "sphinxcontrib-htmlhelp",
+      "version": "2.0.1",
+      "wheel": "https://files.pythonhosted.org/packages/6e/ee/a1f5e39046cbb5f8bc8fba87d1ddf1c6643fbc9194e58d26e606de4b9074/sphinxcontrib_htmlhelp-2.0.1-py3-none-any.whl",
+      "sha256": "c38cb46dccf316c79de6e5515e1770414b797162b23cd3d06e67020e1d2a6903",
+      "license_files": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "sphinxcontrib-jsmath",
+      "version": "1.0.1",
+      "wheel": "https://files.pythonhosted.org/packages/c2/42/4c8646762ee83602e3fb3fbe774c2fac12f317deb0b5dbeeedd2d3ba4b77/sphinxcontrib_jsmath-1.0.1-py2.py3-none-any.whl",
+      "sha256": "2ec2eaebfb78f3f2078e73666b1415417a116cc848b72e5172e596c871103178",
+      "license_files": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "sphinxcontrib-qthelp",
+      "version": "1.0.3",
+      "wheel": "https://files.pythonhosted.org/packages/2b/14/05f9206cf4e9cfca1afb5fd224c7cd434dcc3a433d6d9e4e0264d29c6cdb/sphinxcontrib_qthelp-1.0.3-py2.py3-none-any.whl",
+      "sha256": "bd9fc24bcb748a8d51fd4ecaade681350aa63009a347a8c14e637895444dfab6",
+      "license_files": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "sphinxcontrib-serializinghtml",
+      "version": "1.1.5",
+      "wheel": "https://files.pythonhosted.org/packages/c6/77/5464ec50dd0f1c1037e3c93249b040c8fc8078fdda97530eeb02424b6eea/sphinxcontrib_serializinghtml-1.1.5-py2.py3-none-any.whl",
+      "sha256": "352a9a00ae864471d3a7ead8d7d79f5fc0b57e8b3f95e9867eb9eb28999b92fd",
+      "license_files": [
+        "LICENSE"
+      ]
+    },
+    {
+      "name": "urllib3",
+      "version": "2.5.0",
+      "wheel": "https://files.pythonhosted.org/packages/a7/c2/fe1e52489ae3122415c51f387e221dd0773709bad6c6cdaa599e8a2c5185/urllib3-2.5.0-py3-none-any.whl",
+      "sha256": "e6b01673c0fa6a13e374b50871808eb3bf7046c4b125b216f6bf1cc604cff0dc",
+      "license_files": [
+        "licenses",
+        "licenses/LICENSE.txt"
+      ]
+    }
+  ],
+  "vendor_tree_sha256": "4226d15fd719e68b110ada3427934b983357804885127d8c9d209f50b77be71f",
+  "tree_digest_format": "Sort vendor file paths by Unicode code point; for each, update SHA256 with workspace-relative POSIX path + NUL + raw SHA256(file bytes). Exclude __pycache__; no platform-specific compiled extensions are included."
+}

@@ -1,0 +1,41 @@
+{
+  "locations": {
+    "public_put": ["leveldb/db/db_impl.cc", "DBImpl::Put", "return DB::Put(o, key, val);"],
+    "batch_write": ["leveldb/db/db_impl.cc", "DB::Put", "return Write(opt, &batch);", 0],
+    "batch_key": ["leveldb/db/write_batch.cc", "WriteBatch::Put", "PutLengthPrefixedSlice(&rep_, key);", 0],
+    "group_sync_fence": ["leveldb/db/db_impl.cc", "DBImpl::BuildBatchGroup", "if (w->sync && !first->sync) {"],
+    "wal_append": ["leveldb/db/db_impl.cc", "DBImpl::Write", "status = log_->AddRecord(WriteBatchInternal::Contents(write_batch));"],
+    "wal_sync": ["leveldb/db/db_impl.cc", "DBImpl::Write", "status = logfile_->Sync();"],
+    "memtable_dispatch": ["leveldb/db/db_impl.cc", "DBImpl::Write", "status = WriteBatchInternal::InsertInto(write_batch, mem_);"],
+    "batch_iteration": ["leveldb/db/write_batch.cc", "WriteBatchInternal::InsertInto", "return b->Iterate(&inserter);"],
+    "put_callback": ["leveldb/db/write_batch.cc", "WriteBatch::Iterate", "handler->Put(key, value);"],
+    "entry_insert": ["leveldb/db/write_batch.cc", "MemTableInserter::Put", "mem_->Add(sequence_, kTypeValue, key, value);"],
+    "memtable_index": ["leveldb/db/memtable.cc", "MemTable::Add", "table_.Insert(buf);"],
+    "node_publication": ["leveldb/db/skiplist.h", "SkipList::Node::SetNext", "next_[n].store(x, std::memory_order_release);"],
+    "posix_sync": ["leveldb/util/env_posix.cc", "PosixWritableFile::Sync", "return SyncFd(fd_, filename_);"],
+    "sequence_publication": ["leveldb/db/db_impl.cc", "DBImpl::Write", "versions_->SetLastSequence(last_sequence);"],
+    "read_sequence": ["leveldb/db/db_impl.cc", "DBImpl::Get", "snapshot = versions_->LastSequence();"]
+  },
+  "decisions": {
+    "successful_sync_order": ["wal", "sync", "memtable", "sequence"],
+    "writer_mutex_held_during_wal": false,
+    "sync_follower_can_join_async_leader": false,
+    "async_follower_can_join_sync_leader": true,
+    "sequence_advances_per_record": true,
+    "delete_representation": "tombstone",
+    "posix_flush_is_durable_sync": false,
+    "posix_linux_sync_call": "fdatasync",
+    "sync_error_blocks_future_writes": true,
+    "read_without_snapshot_uses": "last_published_sequence",
+    "default_group_limit_bytes": 1048576,
+    "small_group_extra_bytes": 131072
+  },
+  "decision_evidence": {
+    "unlocked_write": ["leveldb/db/db_impl.cc", "mutex_.Unlock();\n      status = log_->AddRecord", "if (sync_error)", "RecordBackgroundError(status);", "if (!bg_error_.ok())"],
+    "group_size": ["leveldb/db/db_impl.cc", "size_t max_size = 1 << 20;", "max_size = size + (128 << 10);"],
+    "record_sequences": ["leveldb/db/write_batch.cc", "mem_->Add(sequence_, kTypeValue, key, value);\n    sequence_++;", "mem_->Add(sequence_, kTypeDeletion, key, Slice());\n    sequence_++;"],
+    "flush_vs_sync": ["leveldb/util/env_posix.cc", "Status Flush() override { return FlushBuffer(); }", "Status status = WriteUnbuffered(buf_, pos_);", "bool sync_success = ::fdatasync(fd) == 0;"],
+    "read_bound": ["leveldb/db/db_impl.cc", "snapshot = versions_->LastSequence();", "LookupKey lkey(key, snapshot);"],
+    "published_counter": ["leveldb/db/version_set.h", "uint64_t LastSequence() const { return last_sequence_; }", "last_sequence_ = s;"]
+  }
+}

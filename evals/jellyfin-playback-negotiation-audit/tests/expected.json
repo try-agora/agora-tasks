@@ -1,0 +1,44 @@
+{
+  "locations": {
+    "user_claim": ["jellyfin/Jellyfin.Api/Extensions/ClaimsPrincipalExtensions.cs", "ClaimsPrincipalExtensions.GetUserId", "var value = GetClaimValue(user, InternalClaimTypes.UserId);"],
+    "user_boundary": ["jellyfin/Jellyfin.Api/Helpers/RequestHelpers.cs", "RequestHelpers.GetUserId", "if (!userId.Value.Equals(authenticatedUserId) && !isAdministrator)"],
+    "device_profile": ["jellyfin/Jellyfin.Api/Controllers/MediaInfoController.cs", "MediaInfoController.GetPostedPlaybackInfo", "var caps = _deviceManager.GetCapabilities(User.GetDeviceId());"],
+    "manager_binding": ["jellyfin/Emby.Server.Implementations/ApplicationHost.cs", "ApplicationHost.RegisterServices", "serviceCollection.AddSingleton<IMediaSourceManager, MediaSourceManager>();"],
+    "provider_registration": ["jellyfin/Emby.Server.Implementations/ApplicationHost.cs", "ApplicationHost.FindParts", "Resolve<IMediaSourceManager>().AddParts(GetExports<IMediaSourceProvider>());"],
+    "source_fetch": ["jellyfin/Jellyfin.Api/Helpers/MediaInfoHelper.cs", "MediaInfoHelper.GetPlaybackInfo", "var mediaSourcesList = await _mediaSourceManager.GetPlaybackMediaSources(item, user, true, true, CancellationToken.None).ConfigureAwait(false);"],
+    "provider_fanout": ["jellyfin/Emby.Server.Implementations/Library/MediaSourceManager.cs", "MediaSourceManager.GetDynamicMediaSources", "var results = await Task.WhenAll(tasks).ConfigureAwait(false);"],
+    "provider_dispatch": ["jellyfin/Emby.Server.Implementations/Library/MediaSourceManager.cs", "MediaSourceManager.GetDynamicMediaSources", "var sources = await provider.GetMediaSources(item, cancellationToken).ConfigureAwait(false);"],
+    "channel_branch": ["jellyfin/src/Jellyfin.LiveTv/Channels/ChannelDynamicMediaSourceProvider.cs", "ChannelDynamicMediaSourceProvider.GetMediaSources", "return item.SourceType == SourceType.Channel"],
+    "source_copy": ["jellyfin/Jellyfin.Api/Helpers/MediaInfoHelper.cs", "MediaInfoHelper.GetPlaybackInfo", "var mediaSourcesClone = JsonSerializer.Deserialize<MediaSourceInfo[]>(JsonSerializer.SerializeToUtf8Bytes(mediaSources));"],
+    "remote_cap": ["jellyfin/Jellyfin.Api/Helpers/MediaInfoHelper.cs", "MediaInfoHelper.GetMaxBitrate", "maxBitrate = Math.Min(maxBitrate ?? remoteClientMaxBitrate, remoteClientMaxBitrate);"],
+    "stream_dispatch": ["jellyfin/Jellyfin.Api/Helpers/MediaInfoHelper.cs", "MediaInfoHelper.SetDeviceSpecificData", "var streamInfo = item.MediaType == MediaType.Audio"],
+    "video_candidate": ["jellyfin/MediaBrowser.Model/Dlna/StreamBuilder.cs", "StreamBuilder.GetOptimalVideoStream", "var streamInfo = BuildVideoItem(mediaSourceInfo, options);"],
+    "video_eligibility": ["jellyfin/MediaBrowser.Model/Dlna/StreamBuilder.cs", "StreamBuilder.BuildVideoItem", "var isEligibleForDirectPlay = options.EnableDirectPlay && (options.ForceDirectPlay || !bitrateLimitExceeded);"],
+    "streaming_default": ["jellyfin/MediaBrowser.Model/Dlna/MediaOptions.cs", "MediaOptions.GetMaxBitrate", "return Profile.MaxStreamingBitrate;"],
+    "response_order": ["jellyfin/Jellyfin.Api/Helpers/MediaInfoHelper.cs", "MediaInfoHelper.SortMediaSources", "result.MediaSources = result.MediaSources.OrderBy(i =>"],
+    "auto_open_guard": ["jellyfin/Jellyfin.Api/Controllers/MediaInfoController.cs", "MediaInfoController.GetPostedPlaybackInfo", "if (mediaSource is not null && mediaSource.RequiresOpening && string.IsNullOrWhiteSpace(mediaSource.LiveStreamId))"]
+  },
+  "decisions": {
+    "query_overrides_body": true,
+    "missing_profile_uses_device_capabilities": true,
+    "source_filter_case_sensitive": false,
+    "auto_open_selection_case_sensitive": true,
+    "providers_awaited_together": true,
+    "provider_exception_result": "empty_sources",
+    "device_mutations_touch_manager_objects": false,
+    "remote_effective_bitrate": 8000000,
+    "local_effective_bitrate": 12000000,
+    "force_direct_play_bypasses_bitrate_gate": true,
+    "video_copy_disabled_clears_direct_stream": true,
+    "auto_open_default": false,
+    "non_channel_provider_result": "empty_sources",
+    "no_sources_error": "NoCompatibleStream"
+  },
+  "decision_evidence": {
+    "request_defaults": ["jellyfin/Jellyfin.Api/Controllers/MediaInfoController.cs", "maxStreamingBitrate ??= playbackInfoDto?.MaxStreamingBitrate;", "autoOpenLiveStream ??= playbackInfoDto?.AutoOpenLiveStream ?? false;", "profile = caps.DeviceProfile;", "info.MediaSources.FirstOrDefault(i => string.Equals(i.Id, mediaSourceId, StringComparison.Ordinal))"],
+    "source_response": ["jellyfin/Jellyfin.Api/Helpers/MediaInfoHelper.cs", ".Where(i => string.Equals(i.Id, mediaSourceId, StringComparison.OrdinalIgnoreCase))", "result.ErrorCode ??= PlaybackErrorCode.NoCompatibleStream;", "result.MediaSources = mediaSourcesClone;"],
+    "provider_failure": ["jellyfin/Emby.Server.Implementations/Library/MediaSourceManager.cs", "catch (Exception ex)\n            {\n                _logger.LogError(ex, \"Error getting media sources\");\n                return [];"],
+    "channel_selection": ["jellyfin/src/Jellyfin.LiveTv/Channels/ChannelDynamicMediaSourceProvider.cs", ": Task.FromResult(Enumerable.Empty<MediaSourceInfo>());"],
+    "bitrate_and_copy": ["jellyfin/Jellyfin.Api/Helpers/MediaInfoHelper.cs", "var remoteClientMaxBitrate = user.RemoteClientBitrateLimit ?? 0;", "if (remoteClientMaxBitrate <= 0)", "remoteClientMaxBitrate = _serverConfigurationManager.Configuration.RemoteClientBitrateLimit;", "if (!isInLocalNetwork)", "if (!enableDirectStream || !allowVideoStreamCopy)"]
+  }
+}

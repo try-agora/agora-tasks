@@ -1,0 +1,11 @@
+{
+  "repository": "https://github.com/dotnet-architecture/eShopOnWeb",
+  "commit": "4da8212117e87d808d4bbc7da6286fd2147ce606",
+  "selection": "All git-tracked files under src/ ending .cs, .cshtml, .razor, or .csproj, plus root LICENSE, Directory.Packages.props, eShopOnWeb.sln, and global.json.",
+  "normalization": "Decode UTF-8 without removing BOMs, replace CRLF with LF, and append a final LF if missing. Nineteen files differ only by this normalization; no code or other text edits.",
+  "files": 280,
+  "bytes": 406415,
+  "license": "MIT, .NET Foundation and Contributors; original LICENSE and source notices retained.",
+  "source_digest": "5b0d851b96ca2a7a5d7f103fef78400f5690fee13f7ed1c12f0005703bcb1752",
+  "digest_algorithm": "SHA-256 over files sorted by POSIX path relative to src: UTF-8 path + NUL + raw SHA-256(file bytes)."
+}

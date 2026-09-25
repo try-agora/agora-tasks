@@ -1,0 +1,40 @@
+{
+  "locations": {
+    "memtable_probe": {"file": "leveldb/db/db_impl.cc", "symbol": "DBImpl::Get"},
+    "disk_dispatch": {"file": "leveldb/db/db_impl.cc", "symbol": "DBImpl::Get"},
+    "level_zero_sort": {"file": "leveldb/db/version_set.cc", "symbol": "Version::ForEachOverlapping"},
+    "level_callback": {"file": "leveldb/db/version_set.cc", "symbol": "Version::Get"},
+    "table_cache_dispatch": {"file": "leveldb/db/version_set.cc", "symbol": "Version::Get::State::Match"},
+    "table_lookup": {"file": "leveldb/db/table_cache.cc", "symbol": "TableCache::FindTable"},
+    "table_dispatch": {"file": "leveldb/db/table_cache.cc", "symbol": "TableCache::Get"},
+    "filter_gate": {"file": "leveldb/table/table.cc", "symbol": "Table::InternalGet"},
+    "block_cache_lookup": {"file": "leveldb/table/table.cc", "symbol": "Table::BlockReader"},
+    "block_cache_insert": {"file": "leveldb/table/table.cc", "symbol": "Table::BlockReader"},
+    "result_callback": {"file": "leveldb/table/table.cc", "symbol": "Table::InternalGet"},
+    "value_classification": {"file": "leveldb/db/version_set.cc", "symbol": "SaveValue"},
+    "filter_user_key": {"file": "leveldb/db/dbformat.cc", "symbol": "InternalFilterPolicy::KeyMayMatch"},
+    "filter_region_dispatch": {"file": "leveldb/table/filter_block.cc", "symbol": "FilterBlockReader::KeyMayMatch"},
+    "physical_read": {"file": "leveldb/table/format.cc", "symbol": "ReadBlock"},
+    "cached_cleanup": {"file": "leveldb/table/table.cc", "symbol": "Table::BlockReader"}
+  },
+  "decisions": {
+    "search_order": ["mutable_memtable", "immutable_memtable", "table_files"],
+    "read_mutex_held_during_table_get": false,
+    "memtable_tombstone_ends_search": true,
+    "table_tombstone_ends_search": true,
+    "level_zero_order": "descending_file_number",
+    "higher_level_candidates": 1,
+    "fill_cache_false_uses_existing_block": true,
+    "fill_cache_false_can_populate_table_cache": true,
+    "fill_cache_false_inserts_data_block": false,
+    "cache_hit_rechecks_checksum": false,
+    "filter_negative_reads_data_block": false,
+    "out_of_range_filter_may_match": true,
+    "user_filter_receives": "user_key",
+    "block_cache_key": ["table_cache_id", "block_offset"],
+    "external_uncompressed_data_cachable": false,
+    "metadata_error_aborts_open": false,
+    "open_errors_cached": false,
+    "crc_includes_compression_byte": true
+  }
+}

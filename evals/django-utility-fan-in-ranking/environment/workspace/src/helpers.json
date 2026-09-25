@@ -1,0 +1,12 @@
+[
+  "django.utils.crypto.get_random_string",
+  "django.utils.crypto.salted_hmac",
+  "django.utils.encoding.force_bytes",
+  "django.utils.encoding.force_str",
+  "django.utils.html.format_html",
+  "django.utils.module_loading.import_string",
+  "django.utils.safestring.mark_safe",
+  "django.utils.text.slugify",
+  "django.utils.timezone.is_aware",
+  "django.utils.timezone.make_aware"
+]

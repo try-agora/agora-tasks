@@ -1,0 +1,32 @@
+schema_version = "1.3"
+source = "Django@9ffd4eae2ce7a7100c98f681e2b6ab818df384a4; execution-path audit inspired by prior provider research"
+artifacts = ["/app/src/execution-path.json"]
+
+[task]
+name = "agora/django-query-execution-map"
+description = "Map lazy ORM evaluation, dynamic compiler dispatch, and the SQLite execution boundary using source-linked facts."
+authors = [{ name = "Rakshith P" }]
+keywords = ["code-navigation", "execution-path", "dynamic-dispatch", "django", "structured-artifact"]
+
+[metadata]
+difficulty = "hard"
+category = "software-engineering"
+fixture = "upstream-python-source"
+version = "1.1.1"
+
+[agent]
+timeout_sec = 1200
+user = "agent"
+
+[verifier]
+timeout_sec = 120
+user = "root"
+network_mode = "no-network"
+
+[environment]
+build_timeout_sec = 600
+cpus = 1
+memory_mb = 1024
+storage_mb = 2048
+network_mode = "no-network"
+workdir = "/app"

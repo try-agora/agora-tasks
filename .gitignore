@@ -6,3 +6,4 @@ __pycache__/
 .env.*
 evals/jobs/
 build/
+.ruff_cache/

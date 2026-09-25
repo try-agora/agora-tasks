@@ -1,0 +1,98 @@
+{
+  "locations": {
+    "public_put": {
+      "file": "leveldb/db/db_impl.cc",
+      "symbol": "DBImpl::Put",
+      "line": 1193
+    },
+    "batch_write": {
+      "file": "leveldb/db/db_impl.cc",
+      "symbol": "DB::Put",
+      "line": 1472
+    },
+    "batch_key": {
+      "file": "leveldb/db/write_batch.cc",
+      "symbol": "WriteBatch::Put",
+      "line": 101
+    },
+    "group_sync_fence": {
+      "file": "leveldb/db/db_impl.cc",
+      "symbol": "DBImpl::BuildBatchGroup",
+      "line": 1297
+    },
+    "wal_append": {
+      "file": "leveldb/db/db_impl.cc",
+      "symbol": "DBImpl::Write",
+      "line": 1230
+    },
+    "wal_sync": {
+      "file": "leveldb/db/db_impl.cc",
+      "symbol": "DBImpl::Write",
+      "line": 1233
+    },
+    "memtable_dispatch": {
+      "file": "leveldb/db/db_impl.cc",
+      "symbol": "DBImpl::Write",
+      "line": 1239
+    },
+    "batch_iteration": {
+      "file": "leveldb/db/write_batch.cc",
+      "symbol": "WriteBatchInternal::InsertInto",
+      "line": 136
+    },
+    "put_callback": {
+      "file": "leveldb/db/write_batch.cc",
+      "symbol": "WriteBatch::Iterate",
+      "line": 59
+    },
+    "entry_insert": {
+      "file": "leveldb/db/write_batch.cc",
+      "symbol": "MemTableInserter::Put",
+      "line": 122
+    },
+    "memtable_index": {
+      "file": "leveldb/db/memtable.cc",
+      "symbol": "MemTable::Add",
+      "line": 98
+    },
+    "node_publication": {
+      "file": "leveldb/db/skiplist.h",
+      "symbol": "SkipList::Node::SetNext",
+      "line": 163
+    },
+    "posix_sync": {
+      "file": "leveldb/util/env_posix.cc",
+      "symbol": "PosixWritableFile::Sync",
+      "line": 322
+    },
+    "sequence_publication": {
+      "file": "leveldb/db/db_impl.cc",
+      "symbol": "DBImpl::Write",
+      "line": 1251
+    },
+    "read_sequence": {
+      "file": "leveldb/db/db_impl.cc",
+      "symbol": "DBImpl::Get",
+      "line": 1124
+    }
+  },
+  "decisions": {
+    "successful_sync_order": [
+      "wal",
+      "sync",
+      "memtable",
+      "sequence"
+    ],
+    "writer_mutex_held_during_wal": false,
+    "sync_follower_can_join_async_leader": false,
+    "async_follower_can_join_sync_leader": true,
+    "sequence_advances_per_record": true,
+    "delete_representation": "tombstone",
+    "posix_flush_is_durable_sync": false,
+    "posix_linux_sync_call": "fdatasync",
+    "sync_error_blocks_future_writes": true,
+    "read_without_snapshot_uses": "last_published_sequence",
+    "default_group_limit_bytes": 1048576,
+    "small_group_extra_bytes": 131072
+  }
+}

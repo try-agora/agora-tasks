@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/nestjs/nest",
+  "ref": "v10.4.15",
+  "commit": "d0fb875e23e3e6baae8537efd41d54709acade0c",
+  "license": "MIT; workspace/src/LICENSE",
+  "selection": "All tracked packages/ files except paths with a test directory or .spec.ts suffix, plus root LICENSE, package.json, tsconfig.json, and lerna.json. No source transformations, dependencies, tests, generated graphs, or history.",
+  "files": 619,
+  "source_sha256": "31bbbc75f1b5879dd4bca5f8aab45afc1a232e189945b588a4fb5dc426cb2407",
+  "digest_algorithm": "SHA256 of each sorted src-relative path + NUL + raw SHA256(file bytes), concatenated."
+}

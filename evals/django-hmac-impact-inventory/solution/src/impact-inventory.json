@@ -1,0 +1,310 @@
+{
+  "direct_callers": [
+    {
+      "caller": "django/core/signing.py:base64_hmac",
+      "line": 100
+    },
+    {
+      "caller": "django/contrib/auth/base_user.py:AbstractBaseUser.get_session_auth_hash",
+      "line": 132
+    },
+    {
+      "caller": "django/contrib/auth/tokens.py:PasswordResetTokenGenerator._make_token_with_timestamp",
+      "line": 88
+    }
+  ],
+  "entrypoints": {
+    "signing.dumps": {
+      "affected": true,
+      "path": [
+        "django/core/signing.py:dumps",
+        "django/core/signing.py:Signer.sign_object",
+        "django/core/signing.py:TimestampSigner.sign",
+        "django/core/signing.py:Signer.sign",
+        "django/core/signing.py:Signer.signature",
+        "django/core/signing.py:base64_hmac",
+        "django/utils/crypto.py:salted_hmac"
+      ],
+      "call_lines": [
+        150,
+        241,
+        263,
+        207,
+        204,
+        100
+      ]
+    },
+    "signing.loads": {
+      "affected": true,
+      "path": [
+        "django/core/signing.py:loads",
+        "django/core/signing.py:Signer.unsign_object",
+        "django/core/signing.py:TimestampSigner.unsign",
+        "django/core/signing.py:Signer.unsign",
+        "django/core/signing.py:Signer.signature",
+        "django/core/signing.py:base64_hmac",
+        "django/utils/crypto.py:salted_hmac"
+      ],
+      "call_lines": [
+        168,
+        246,
+        270,
+        214,
+        204,
+        100
+      ]
+    },
+    "signing.get_cookie_signer": {
+      "affected": false,
+      "path": [],
+      "call_lines": []
+    },
+    "session.encode": {
+      "affected": true,
+      "path": [
+        "django/contrib/sessions/backends/base.py:SessionBase.encode",
+        "django/core/signing.py:dumps",
+        "django/core/signing.py:Signer.sign_object",
+        "django/core/signing.py:TimestampSigner.sign",
+        "django/core/signing.py:Signer.sign",
+        "django/core/signing.py:Signer.signature",
+        "django/core/signing.py:base64_hmac",
+        "django/utils/crypto.py:salted_hmac"
+      ],
+      "call_lines": [
+        94,
+        150,
+        241,
+        263,
+        207,
+        204,
+        100
+      ]
+    },
+    "session.decode": {
+      "affected": true,
+      "path": [
+        "django/contrib/sessions/backends/base.py:SessionBase.decode",
+        "django/core/signing.py:loads",
+        "django/core/signing.py:Signer.unsign_object",
+        "django/core/signing.py:TimestampSigner.unsign",
+        "django/core/signing.py:Signer.unsign",
+        "django/core/signing.py:Signer.signature",
+        "django/core/signing.py:base64_hmac",
+        "django/utils/crypto.py:salted_hmac"
+      ],
+      "call_lines": [
+        103,
+        168,
+        246,
+        270,
+        214,
+        204,
+        100
+      ]
+    },
+    "cookie_session.save": {
+      "affected": true,
+      "path": [
+        "django/contrib/sessions/backends/signed_cookies.py:SessionStore.save",
+        "django/contrib/sessions/backends/signed_cookies.py:SessionStore._get_session_key",
+        "django/core/signing.py:dumps",
+        "django/core/signing.py:Signer.sign_object",
+        "django/core/signing.py:TimestampSigner.sign",
+        "django/core/signing.py:Signer.sign",
+        "django/core/signing.py:Signer.signature",
+        "django/core/signing.py:base64_hmac",
+        "django/utils/crypto.py:salted_hmac"
+      ],
+      "call_lines": [
+        39,
+        72,
+        150,
+        241,
+        263,
+        207,
+        204,
+        100
+      ]
+    },
+    "cookie_session.load": {
+      "affected": true,
+      "path": [
+        "django/contrib/sessions/backends/signed_cookies.py:SessionStore.load",
+        "django/core/signing.py:loads",
+        "django/core/signing.py:Signer.unsign_object",
+        "django/core/signing.py:TimestampSigner.unsign",
+        "django/core/signing.py:Signer.unsign",
+        "django/core/signing.py:Signer.signature",
+        "django/core/signing.py:base64_hmac",
+        "django/utils/crypto.py:salted_hmac"
+      ],
+      "call_lines": [
+        13,
+        168,
+        246,
+        270,
+        214,
+        204,
+        100
+      ]
+    },
+    "cookie_session.cycle_key": {
+      "affected": true,
+      "path": [
+        "django/contrib/sessions/backends/signed_cookies.py:SessionStore.cycle_key",
+        "django/contrib/sessions/backends/signed_cookies.py:SessionStore.save",
+        "django/contrib/sessions/backends/signed_cookies.py:SessionStore._get_session_key",
+        "django/core/signing.py:dumps",
+        "django/core/signing.py:Signer.sign_object",
+        "django/core/signing.py:TimestampSigner.sign",
+        "django/core/signing.py:Signer.sign",
+        "django/core/signing.py:Signer.signature",
+        "django/core/signing.py:base64_hmac",
+        "django/utils/crypto.py:salted_hmac"
+      ],
+      "call_lines": [
+        65,
+        39,
+        72,
+        150,
+        241,
+        263,
+        207,
+        204,
+        100
+      ]
+    },
+    "cookie_session.create": {
+      "affected": false,
+      "path": [],
+      "call_lines": []
+    },
+    "http.set_signed_cookie": {
+      "affected": true,
+      "path": [
+        "django/http/response.py:HttpResponseBase.set_signed_cookie",
+        "django/core/signing.py:TimestampSigner.sign",
+        "django/core/signing.py:Signer.sign",
+        "django/core/signing.py:Signer.signature",
+        "django/core/signing.py:base64_hmac",
+        "django/utils/crypto.py:salted_hmac"
+      ],
+      "call_lines": [
+        279,
+        263,
+        207,
+        204,
+        100
+      ]
+    },
+    "http.get_signed_cookie": {
+      "affected": true,
+      "path": [
+        "django/http/request.py:HttpRequest.get_signed_cookie",
+        "django/core/signing.py:TimestampSigner.unsign",
+        "django/core/signing.py:Signer.unsign",
+        "django/core/signing.py:Signer.signature",
+        "django/core/signing.py:base64_hmac",
+        "django/utils/crypto.py:salted_hmac"
+      ],
+      "call_lines": [
+        190,
+        270,
+        214,
+        204,
+        100
+      ]
+    },
+    "password_reset.make_token": {
+      "affected": true,
+      "path": [
+        "django/contrib/auth/tokens.py:PasswordResetTokenGenerator.make_token",
+        "django/contrib/auth/tokens.py:PasswordResetTokenGenerator._make_token_with_timestamp",
+        "django/utils/crypto.py:salted_hmac"
+      ],
+      "call_lines": [
+        45,
+        88
+      ]
+    },
+    "password_reset.check_token": {
+      "affected": true,
+      "path": [
+        "django/contrib/auth/tokens.py:PasswordResetTokenGenerator.check_token",
+        "django/contrib/auth/tokens.py:PasswordResetTokenGenerator._make_token_with_timestamp",
+        "django/utils/crypto.py:salted_hmac"
+      ],
+      "call_lines": [
+        71,
+        88
+      ]
+    },
+    "auth.login": {
+      "affected": true,
+      "path": [
+        "django/contrib/auth/__init__.py:login",
+        "django/contrib/auth/base_user.py:AbstractBaseUser.get_session_auth_hash",
+        "django/utils/crypto.py:salted_hmac"
+      ],
+      "call_lines": [
+        104,
+        132
+      ]
+    },
+    "auth.get_user": {
+      "affected": true,
+      "path": [
+        "django/contrib/auth/__init__.py:get_user",
+        "django/contrib/auth/base_user.py:AbstractBaseUser.get_session_auth_hash",
+        "django/utils/crypto.py:salted_hmac"
+      ],
+      "call_lines": [
+        203,
+        132
+      ]
+    },
+    "auth.update_session_auth_hash": {
+      "affected": true,
+      "path": [
+        "django/contrib/auth/__init__.py:update_session_auth_hash",
+        "django/contrib/auth/base_user.py:AbstractBaseUser.get_session_auth_hash",
+        "django/utils/crypto.py:salted_hmac"
+      ],
+      "call_lines": [
+        230,
+        132
+      ]
+    },
+    "user.set_password": {
+      "affected": false,
+      "path": [],
+      "call_lines": []
+    },
+    "user.check_password": {
+      "affected": false,
+      "path": [],
+      "call_lines": []
+    },
+    "user.has_usable_password": {
+      "affected": false,
+      "path": [],
+      "call_lines": []
+    },
+    "csrf.get_token": {
+      "affected": false,
+      "path": [],
+      "call_lines": []
+    },
+    "csrf._does_token_match": {
+      "affected": false,
+      "path": [],
+      "call_lines": []
+    },
+    "crypto.constant_time_compare": {
+      "affected": false,
+      "path": [],
+      "call_lines": []
+    }
+  }
+}

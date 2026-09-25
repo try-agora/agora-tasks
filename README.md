@@ -1,109 +1,143 @@
 # Agora Tasks
 
-**A local Harbor dataset of ten tasks for reliable coding and cross-session knowledge reuse.**
+**A reproducible evaluation suite for coding agents and code-navigation tools.**
 
-Can an agent fix the shared cause of a bug, preserve an API contract, or reuse what it
-learned in a previous session? This collection turns those questions into small,
-inspectable tasks with frozen source, behavioral verifiers, and runnable reference
-solutions.
+25 self-contained Harbor tasks cover code repair, repository comprehension, and
+cross-session reuse. Each task has a frozen workspace, an explicit contract,
+a hidden verifier, a reference solution, and a plausible wrong solution that
+must fail. Validation requires no model credentials or Agora installation.
 
-The task and the tool under test are independent. Run the same task with a bare coding
-agent, plain notes, or your own knowledge tool. No Agora installation is required.
+**25 tasks · 27 scored stages · 81 verifier control scenarios**
 
-**10 tasks · 12 scored stages · deterministic grading · no credentials for validation**
+## Review the engineering
 
-## Start here
+Start with these three examples:
+
+- [Django multi-parent update](evals/django-multi-parent-update/README.md): a real ORM
+  repair with 15 SQLite behavior checks, including unrelated-row preservation,
+  deeper inheritance, rollback, and set-based execution.
+- [Cross-session framework reuse](evals/cross-session-framework-reuse/README.md):
+  two fresh conversations with workspace resets and explicit persistent-state boundaries.
+- [Alamofire deferred validation](evals/alamofire-deferred-validation-audit/README.md):
+  a bounded source audit with protected source hashes and independently recorded witnesses.
+
+The [methodology](docs/methodology.md) explains grading and isolation.
+The [validation record](docs/validation.md) distinguishes local checks, container checks,
+and hosted CI. The [job checker](scripts/check_job.py) verifies complete task/stage
+coverage instead of trusting an aggregate reward. Its regression test covers a real
+Harbor failure mode: a successful summary with a failed later stage.
+
+## Run without a model
+
+Requires Python 3.12 or 3.13, [uv](https://docs.astral.sh/uv/), and Docker with
+Compose and Buildx. Initial dependency installation and image builds need network access.
+Task execution and verification need no external services.
 
 ```sh
 uv sync --locked
 uv run python scripts/check.py
-uv run harbor run -p evals -a oracle --env docker --jobs-dir evals/jobs
+uv run python -m unittest discover -s scripts -p 'test_*.py'
+uv run harbor run -p evals -a oracle --env docker --jobs-dir evals/jobs --job-name oracle
+uv run python scripts/check_job.py evals/jobs/oracle --expected 1
+uv run harbor run -p evals -a nop --env docker --jobs-dir evals/jobs --job-name nop
+uv run python scripts/check_job.py evals/jobs/nop --expected 0
 ```
 
-Requires Python 3.12 or 3.13, uv, and Docker with Compose and Buildx. The first command installs the pinned
-Harbor runtime. The second checks every verifier against a baseline, a correct solution,
-and a plausible wrong solution. The third runs the complete local dataset in Docker
-using supplied reference solutions, with no model API calls.
+`check.py` tests every stage against untouched, correct, and deliberately incorrect
+work. Docker runs also exercise solution scripts, hidden-test upload, user permissions,
+workspace resets, and artifact collection. The checker defaults to all current tasks;
+use `--count 1` when checking a single-task job. Use fresh job names for repeated runs.
 
-`evals/` is the dataset: its ten immediate subdirectories are Harbor tasks.
-To select one task, use `-p evals/checkout-discount-once`.
-To evaluate an agent, select it with `-a` and its model with `-m`;
-see [running the dataset](docs/running.md). Everything stays on your machine unless
-you explicitly choose to publish it or use a hosted model/tool.
+For a shorter first look, select `-p evals/checkout-discount-once` in the Harbor
+commands and add `--count 1` to the checker. Each task can also be copied out and run
+independently with the pinned Harbor runtime.
 
-For a quick code review, start with
-[the checkout task](evals/checkout-discount-once/instruction.md),
-[its behavioral verifier](evals/checkout-discount-once/tests/test_behavior.py), and
-[its reference solution](evals/checkout-discount-once/solution/src/shop/serializer.py).
-For the memory boundary, inspect
-[cross-session framework reuse](evals/cross-session-framework-reuse/README.md).
+## Task inventory
 
-## Tasks
+The original ten tasks use focused synthetic Python fixtures. Fifteen further tasks
+use pinned upstream source from Django, Sphinx, NestJS, LevelDB, eShopOnWeb, Jellyfin,
+Excalidraw, and Alamofire. Source-audit fixtures are intentionally scoped snapshots,
+not necessarily complete buildable upstream distributions.
 
-| Task | Capability | Failure it distinguishes |
-| --- | --- | --- |
-| [Per-client rate limiting](evals/middleware-rate-limiting) | Framework extension and state lifetime | Counters reset per request or leak between application instances |
-| [Optional authentication](evals/middleware-authentication) | Middleware composition and access checks | Case-sensitive headers, blank credentials, broken anonymous mode |
-| [Notification API compatibility](evals/notification-api-compatibility) | Safe shared-API evolution | Existing callers break or valid empty metadata disappears |
-| [Stable record deduplication](evals/stable-record-deduplication) | Unicode-aware data transformation | Wrong normalization, reordered data, or mutation of caller-owned records |
-| [Checkout discounts](evals/checkout-discount-once) | Root-cause repair across callers | A discount is applied twice or only the API path is repaired |
-| [Git remote normalization](evals/git-remote-normalization) | Protocol parsing and input validation | Explicit ports, IPv6, or SCP-style repository paths are misread |
-| [Download filename encoding](evals/download-filename-encoding) | Safe protocol serialization | Quotes or Unicode are lost, or control characters enter a header |
-| [Transactional buffer acknowledgement](evals/transactional-buffer-acknowledgement) | Durability and atomic mutation | Unacknowledged data is lost or partial deletes survive an error |
-| [Cross-session framework reuse](evals/cross-session-framework-reuse) | Transfer repository conventions | A fresh session must re-learn the extension mechanism |
-| [Cross-session deduplication reuse](evals/cross-session-deduplication-reuse) | Transfer a normalization lesson | The same Unicode mistake recurs on a different export field |
+| Task | Engineering contract |
+| --- | --- |
+| [alamofire-deferred-validation-audit](evals/alamofire-deferred-validation-audit/README.md) | Trace request setup, deferred validation callbacks, completion barriers, retry, and response serialization. |
+| [checkout-discount-once](evals/checkout-discount-once/README.md) | Trace a pricing regression across API, service, and serialization boundaries. |
+| [cross-session-deduplication-reuse](evals/cross-session-deduplication-reuse/README.md) | Transfer a normalization lesson to a second export field after source reset. |
+| [cross-session-framework-reuse](evals/cross-session-framework-reuse/README.md) | Learn a middleware framework, then apply that knowledge after a clean workspace reset. |
+| [django-hmac-impact-inventory](evals/django-hmac-impact-inventory/README.md) | Inventory direct callers and shortest upstream impact paths for a shared Django signing helper. |
+| [django-lookup-hierarchy-audit](evals/django-lookup-hierarchy-audit/README.md) | Inventory core Lookup descendants, ordered bases, and effective hook owners before an ORM API migration. |
+| [django-multi-parent-update](evals/django-multi-parent-update/README.md) | Repair bulk updates across multiple inherited database tables without corrupting unrelated rows. |
+| [django-query-execution-map](evals/django-query-execution-map/README.md) | Map lazy ORM evaluation, dynamic compiler dispatch, and the SQLite execution boundary using source-linked facts. |
+| [django-upsert-column-mapping](evals/django-upsert-column-mapping/README.md) | Repair custom-column handling across bulk-upsert validation, insert compilation, and backend SQL generation. |
+| [django-utility-fan-in-ranking](evals/django-utility-fan-in-ranking/README.md) | Rank shared utilities by distinct-file direct-caller fan-in, resolving aliases and rejecting incidental text matches. |
+| [download-filename-encoding](evals/download-filename-encoding/README.md) | Preserve Unicode filenames and quoted parameters while rejecting header injection. |
+| [eshop-order-lifecycle-audit](evals/eshop-order-lifecycle-audit/README.md) | Audit checkout ordering, snapshot semantics, DI/mediator boundaries, and customer predicates in eShopOnWeb. |
+| [excalidraw-render-invalidation-audit](evals/excalidraw-render-invalidation-audit/README.md) | Trace element mutations across scene observers, React rendering, two caches, and animation-frame scheduling. |
+| [git-remote-normalization](evals/git-remote-normalization/README.md) | Parse URL and SCP-style remotes while preserving identity and validating malformed input. |
+| [jellyfin-playback-negotiation-audit](evals/jellyfin-playback-negotiation-audit/README.md) | Trace playback requests across user selection, dependency injection, media providers, bitrate policy, and stream negotiation. |
+| [leveldb-read-cache-audit](evals/leveldb-read-cache-audit/README.md) | Trace point reads across memtables, overlapping files, table and block caches, filters, and callbacks. |
+| [leveldb-write-path-audit](evals/leveldb-write-path-audit/README.md) | Trace write batching, WAL durability, callback dispatch, and reader-visible sequence publication in LevelDB. |
+| [middleware-authentication](evals/middleware-authentication/README.md) | Add a security boundary while preserving opt-in behavior and middleware composition. |
+| [middleware-rate-limiting](evals/middleware-rate-limiting/README.md) | Extend an unfamiliar middleware pipeline without breaking state lifetime or routing. |
+| [nestjs-http-lifecycle-audit](evals/nestjs-http-lifecycle-audit/README.md) | Trace HTTP routing, request policy, response adaptation, and exception boundaries in pinned NestJS source. |
+| [notification-api-compatibility](evals/notification-api-compatibility/README.md) | Evolve a shared API without changing legacy payloads or breaking sibling callers. |
+| [sphinx-extension-event-routing](evals/sphinx-extension-event-routing/README.md) | Audit configured extension dependencies, callback registration, and priority-stable event dispatch. |
+| [sphinx-prolog-document-titles](evals/sphinx-prolog-document-titles/README.md) | Repair role-based title loss across Sphinx's RST preprocessing, parser, and navigation pipeline. |
+| [stable-record-deduplication](evals/stable-record-deduplication/README.md) | Preserve data identity and ordering while normalizing duplicate keys. |
+| [transactional-buffer-acknowledgement](evals/transactional-buffer-acknowledgement/README.md) | Release acknowledged records without losing unacknowledged data or violating atomicity. |
 
-## Dataset layout
+## Architecture
 
 ```text
-agora-tasks/
-├── README.md
-├── evals/                       # local Harbor dataset
-│   └── <task>/
-│       ├── README.md
-│       ├── task.toml
-│       ├── instruction.md
-│       ├── environment/          # pinned base image and frozen source
-│       ├── solution/             # executable reference implementation
-│       └── tests/                # hidden checks and a known-wrong variant
-├── tools/                       # independent run-time tool instructions
-└── docs/
+evals/<task>/
+  task.toml             # native Harbor contract
+  instruction.md        # agent-visible request
+  environment/          # pinned image, frozen source, source provenance
+  solution/             # reference implementation, Oracle-only upload
+  tests/                # hidden verifier and incorrect-solution control
+  steps/<name>/         # per-step contracts in the two reuse tasks
+
+overlays/               # independent tool installation, indexing, MCP configs
+scripts/                # local checks, saved-job validation, offline scoring
+docs/                   # methodology, running instructions, validation record
 ```
 
-Multi-step tasks place instructions, solutions, and tests under `steps/<name>/`.
-Each directory runs independently with Harbor; no repository-specific runner or
-parent-directory imports are required. The layout follows the
-[Harbor cookbook](https://github.com/harbor-framework/harbor-cookbook).
+Tasks never import overlays. Agents run unprivileged; verifiers run without network.
+Reference solutions and hidden tests are excluded from task images. Multi-step overlays
+rebuild indexes after reset and before agent timing. Missing telemetry and infrastructure
+errors remain unscored; cached tokens are counted once. Dependencies and source revisions
+are pinned, while remaining build-time inputs are documented explicitly.
 
-## Evaluate the work, not the tool's name
+## Optional agent and tool runs
 
-Task instructions and scores stay fixed across tools. Agent, model, MCP configuration,
-and optional adoption instructions are supplied at launch through Harbor.
-[Tool configuration](tools/README.md) includes a plain-notes control and describes the
-boundary for external integrations.
+For an existing Codex login:
 
-In the two reuse tasks, each step starts a fresh conversation and the source workspace
-resets before step two. State outside the workspace can persist within the trial.
-Correctness is graded per step; tokens, time, and observed tool activity belong in the
-comparison, not in a tool-specific reward.
+```sh
+CODEX_FORCE_AUTH_JSON=1 uv run harbor run -c overlays/baseline.yaml \
+  -p evals/checkout-discount-once --job-name agent-smoke
+```
 
-## Evidence and boundaries
+This consumes model usage. See [running instructions](docs/running.md) for authentication
+and network policy, and [runtime overlays](overlays/README.md) for the four MCP integrations.
+Overlay compatibility is separate from task correctness; the current support limits are
+listed there. Model runs are not required to review or validate this project.
 
-See [validation results](docs/validation.md), [running and inspecting trials](docs/running.md),
-and [evaluation methodology](docs/methodology.md).
+[Historical experiments](results.md) retain the original results and limitations.
+They are not release acceptance criteria or a claim that any tool wins.
 
-These are synthetic, focused fixtures adapted from earlier internal evaluations.
-[Provenance](PROVENANCE.md) records the source scenarios and reductions. Reference-solution
-success proves the tasks are solvable; it is not an agent benchmark result or a claim
-that any tool improves performance. Full-repository difficulty and adversarial verifier
-security are outside this release's scope.
+## Contributing and scope
 
-## Contributing
+Keep tasks independent. Specify the observable contract, preserve upstream attribution,
+add a correct reference and a plausible incorrect control, then run local checks and
+both Docker controls. Never change a published task contract silently after observing
+agent results. Record a task version change when its grading contract changes.
 
-Keep each task self-contained and independent of the evaluated tool. Document the
-behavioral contract, add a reference solution, and supply a plausible wrong implementation
-that the verifier rejects. Run `uv run python scripts/check.py` and the Docker Oracle
-trial before submitting a change. See [methodology](docs/methodology.md) for scoring
-and experimental controls.
+These verifiers target cooperative coding-agent evaluation. They do not isolate
+malicious candidate code from the verifier inside the shared container. Public upstream
+code can also occur in model training data; this suite does not establish uncontaminated
+reasoning or general tool superiority.
 
-MIT licensed.
+Original harness and task-authoring code is [MIT licensed](LICENSE). Vendored upstream
+source, dependencies, and adapted upstream fixes retain their own licenses and notices;
+see [provenance and attribution](PROVENANCE.md).

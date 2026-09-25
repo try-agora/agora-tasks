@@ -1,0 +1,112 @@
+{
+  "locations": {
+    "route_metadata": {
+      "file": "packages/core/router/paths-explorer.ts",
+      "symbol": "PathsExplorer.exploreMethodMetadata",
+      "line": 60
+    },
+    "route_registration": {
+      "file": "packages/core/router/router-explorer.ts",
+      "symbol": "RouterExplorer.applyCallbackToRouter",
+      "line": 235
+    },
+    "request_scope": {
+      "file": "packages/core/router/router-explorer.ts",
+      "symbol": "RouterExplorer.createRequestScopedHandler",
+      "line": 375
+    },
+    "guard_call": {
+      "file": "packages/core/guards/guards-consumer.ts",
+      "symbol": "GuardsConsumer.tryActivate",
+      "line": 22
+    },
+    "guard_rejection": {
+      "file": "packages/core/router/router-execution-context.ts",
+      "symbol": "RouterExecutionContext.createGuardsFn",
+      "line": 372
+    },
+    "interceptor_call": {
+      "file": "packages/core/interceptors/interceptors-consumer.ts",
+      "symbol": "InterceptorsConsumer.intercept",
+      "line": 36
+    },
+    "body_parameter": {
+      "file": "packages/core/router/route-params-factory.ts",
+      "symbol": "RouteParamsFactory.exchangeKeyForValue",
+      "line": 22
+    },
+    "parameter_pipes": {
+      "file": "packages/core/router/router-execution-context.ts",
+      "symbol": "RouterExecutionContext.createPipesFn",
+      "line": 405
+    },
+    "pipe_call": {
+      "file": "packages/core/pipes/pipes-consumer.ts",
+      "symbol": "PipesConsumer.applyPipes",
+      "line": 26
+    },
+    "controller_call": {
+      "file": "packages/core/router/router-execution-context.ts",
+      "symbol": "RouterExecutionContext.create",
+      "line": 150
+    },
+    "observable_result": {
+      "file": "packages/core/router/router-response-controller.ts",
+      "symbol": "RouterResponseController.transformToResult",
+      "line": 68
+    },
+    "adapter_reply": {
+      "file": "packages/core/router/router-response-controller.ts",
+      "symbol": "RouterResponseController.apply",
+      "line": 38
+    },
+    "express_body": {
+      "file": "packages/platform-express/adapters/express-adapter.ts",
+      "symbol": "ExpressAdapter.reply",
+      "line": 115
+    },
+    "exception_boundary": {
+      "file": "packages/core/router/router-proxy.ts",
+      "symbol": "RouterProxy.createProxy",
+      "line": 24
+    },
+    "filter_precedence": {
+      "file": "packages/core/router/router-exception-filters.ts",
+      "symbol": "RouterExceptionFilters.create",
+      "line": 43
+    },
+    "filter_dispatch": {
+      "file": "packages/core/exceptions/exceptions-handler.ts",
+      "symbol": "ExceptionsHandler.invokeCustomFilters",
+      "line": 35
+    },
+    "fallback_exception": {
+      "file": "packages/core/exceptions/base-exception-filter.ts",
+      "symbol": "BaseExceptionFilter.catch",
+      "line": 43
+    }
+  },
+  "decisions": {
+    "guard_denial": "ForbiddenException",
+    "guard_short_circuits": true,
+    "pipe_scope_order": [
+      "global",
+      "controller",
+      "method",
+      "parameter"
+    ],
+    "pipes_for_one_argument": "sequential",
+    "different_arguments": "parallel",
+    "interceptor_can_skip_controller": true,
+    "ordinary_observable_value": "last",
+    "post_default_status": 201,
+    "response_decorator_auto_reply": false,
+    "passthrough_auto_reply": true,
+    "filter_scope_order": [
+      "method",
+      "controller",
+      "global"
+    ],
+    "all_matching_filters_run": false
+  }
+}

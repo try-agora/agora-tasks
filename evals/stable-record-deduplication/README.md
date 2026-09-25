@@ -11,7 +11,7 @@ uv run harbor run -p evals/stable-record-deduplication -a oracle --env docker --
 ```
 
 This credential-free command checks the reference solution. See [running an agent](../../docs/running.md)
-for model-backed trials and [tool integrations](../../tools/README.md) for independent tool selection.
+for model-backed trials and [tool integrations](../../overlays/README.md) for independent tool selection.
 
 ## Contract
 

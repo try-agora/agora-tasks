@@ -1,0 +1,644 @@
+{
+  "classes": {
+    "django/db/models/fields/json.py:DataContains": {
+      "bases": [
+        "django/db/models/lookups.py:PostgresOperatorLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/fields/json.py:DataContains.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:ContainedBy": {
+      "bases": [
+        "django/db/models/lookups.py:PostgresOperatorLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/fields/json.py:ContainedBy.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:HasKeyLookup": {
+      "bases": [
+        "django/db/models/lookups.py:PostgresOperatorLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/fields/json.py:HasKeyLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:HasKey": {
+      "bases": [
+        "django/db/models/fields/json.py:HasKeyLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/fields/json.py:HasKeyLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:HasKeys": {
+      "bases": [
+        "django/db/models/fields/json.py:HasKeyLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/fields/json.py:HasKeyLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:HasAnyKeys": {
+      "bases": [
+        "django/db/models/fields/json.py:HasKeys"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/fields/json.py:HasKeyLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:HasKeyOrArrayIndex": {
+      "bases": [
+        "django/db/models/fields/json.py:HasKey"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/fields/json.py:HasKeyLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:JSONExact": {
+      "bases": [
+        "django/db/models/lookups.py:Exact"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:Exact.as_sql",
+        "process_rhs": "django/db/models/fields/json.py:JSONExact.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:JSONIContains": {
+      "bases": [
+        "django/db/models/fields/json.py:CaseInsensitiveMixin",
+        "django/db/models/lookups.py:IContains"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/fields/json.py:CaseInsensitiveMixin.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformIsNull": {
+      "bases": [
+        "django/db/models/lookups.py:IsNull"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:IsNull.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformIn": {
+      "bases": [
+        "django/db/models/lookups.py:In"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:In.as_sql",
+        "process_rhs": "django/db/models/lookups.py:In.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformExact": {
+      "bases": [
+        "django/db/models/fields/json.py:JSONExact"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:Exact.as_sql",
+        "process_rhs": "django/db/models/fields/json.py:KeyTransformExact.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformIExact": {
+      "bases": [
+        "django/db/models/fields/json.py:CaseInsensitiveMixin",
+        "django/db/models/fields/json.py:KeyTransformTextLookupMixin",
+        "django/db/models/lookups.py:IExact"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/fields/json.py:CaseInsensitiveMixin.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformIContains": {
+      "bases": [
+        "django/db/models/fields/json.py:CaseInsensitiveMixin",
+        "django/db/models/fields/json.py:KeyTransformTextLookupMixin",
+        "django/db/models/lookups.py:IContains"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/fields/json.py:CaseInsensitiveMixin.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformStartsWith": {
+      "bases": [
+        "django/db/models/fields/json.py:KeyTransformTextLookupMixin",
+        "django/db/models/lookups.py:StartsWith"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:PatternLookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformIStartsWith": {
+      "bases": [
+        "django/db/models/fields/json.py:CaseInsensitiveMixin",
+        "django/db/models/fields/json.py:KeyTransformTextLookupMixin",
+        "django/db/models/lookups.py:IStartsWith"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/fields/json.py:CaseInsensitiveMixin.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformEndsWith": {
+      "bases": [
+        "django/db/models/fields/json.py:KeyTransformTextLookupMixin",
+        "django/db/models/lookups.py:EndsWith"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:PatternLookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformIEndsWith": {
+      "bases": [
+        "django/db/models/fields/json.py:CaseInsensitiveMixin",
+        "django/db/models/fields/json.py:KeyTransformTextLookupMixin",
+        "django/db/models/lookups.py:IEndsWith"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/fields/json.py:CaseInsensitiveMixin.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformRegex": {
+      "bases": [
+        "django/db/models/fields/json.py:KeyTransformTextLookupMixin",
+        "django/db/models/lookups.py:Regex"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:Regex.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformIRegex": {
+      "bases": [
+        "django/db/models/fields/json.py:CaseInsensitiveMixin",
+        "django/db/models/fields/json.py:KeyTransformTextLookupMixin",
+        "django/db/models/lookups.py:IRegex"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:Regex.as_sql",
+        "process_rhs": "django/db/models/fields/json.py:CaseInsensitiveMixin.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformLt": {
+      "bases": [
+        "django/db/models/fields/json.py:KeyTransformNumericLookupMixin",
+        "django/db/models/lookups.py:LessThan"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/fields/json.py:KeyTransformNumericLookupMixin.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformLte": {
+      "bases": [
+        "django/db/models/fields/json.py:KeyTransformNumericLookupMixin",
+        "django/db/models/lookups.py:LessThanOrEqual"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/fields/json.py:KeyTransformNumericLookupMixin.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformGt": {
+      "bases": [
+        "django/db/models/fields/json.py:KeyTransformNumericLookupMixin",
+        "django/db/models/lookups.py:GreaterThan"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/fields/json.py:KeyTransformNumericLookupMixin.process_rhs"
+      }
+    },
+    "django/db/models/fields/json.py:KeyTransformGte": {
+      "bases": [
+        "django/db/models/fields/json.py:KeyTransformNumericLookupMixin",
+        "django/db/models/lookups.py:GreaterThanOrEqual"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/fields/json.py:KeyTransformNumericLookupMixin.process_rhs"
+      }
+    },
+    "django/db/models/fields/related_lookups.py:RelatedIn": {
+      "bases": [
+        "django/db/models/lookups.py:In"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/fields/related_lookups.py:RelatedIn.as_sql",
+        "process_rhs": "django/db/models/lookups.py:In.process_rhs"
+      }
+    },
+    "django/db/models/fields/related_lookups.py:RelatedExact": {
+      "bases": [
+        "django/db/models/fields/related_lookups.py:RelatedLookupMixin",
+        "django/db/models/lookups.py:Exact"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/fields/related_lookups.py:RelatedLookupMixin.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/related_lookups.py:RelatedLessThan": {
+      "bases": [
+        "django/db/models/fields/related_lookups.py:RelatedLookupMixin",
+        "django/db/models/lookups.py:LessThan"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/fields/related_lookups.py:RelatedLookupMixin.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/related_lookups.py:RelatedGreaterThan": {
+      "bases": [
+        "django/db/models/fields/related_lookups.py:RelatedLookupMixin",
+        "django/db/models/lookups.py:GreaterThan"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/fields/related_lookups.py:RelatedLookupMixin.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/related_lookups.py:RelatedGreaterThanOrEqual": {
+      "bases": [
+        "django/db/models/fields/related_lookups.py:RelatedLookupMixin",
+        "django/db/models/lookups.py:GreaterThanOrEqual"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/fields/related_lookups.py:RelatedLookupMixin.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/related_lookups.py:RelatedLessThanOrEqual": {
+      "bases": [
+        "django/db/models/fields/related_lookups.py:RelatedLookupMixin",
+        "django/db/models/lookups.py:LessThanOrEqual"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/fields/related_lookups.py:RelatedLookupMixin.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/fields/related_lookups.py:RelatedIsNull": {
+      "bases": [
+        "django/db/models/fields/related_lookups.py:RelatedLookupMixin",
+        "django/db/models/lookups.py:IsNull"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/fields/related_lookups.py:RelatedLookupMixin.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:BuiltinLookup": {
+      "bases": [
+        "django/db/models/lookups.py:Lookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:PostgresOperatorLookup": {
+      "bases": [
+        "django/db/models/lookups.py:FieldGetDbPrepValueMixin",
+        "django/db/models/lookups.py:Lookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/expressions.py:BaseExpression.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:Exact": {
+      "bases": [
+        "django/db/models/lookups.py:FieldGetDbPrepValueMixin",
+        "django/db/models/lookups.py:BuiltinLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:Exact.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:IExact": {
+      "bases": [
+        "django/db/models/lookups.py:BuiltinLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:IExact.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:GreaterThan": {
+      "bases": [
+        "django/db/models/lookups.py:FieldGetDbPrepValueMixin",
+        "django/db/models/lookups.py:BuiltinLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:GreaterThanOrEqual": {
+      "bases": [
+        "django/db/models/lookups.py:FieldGetDbPrepValueMixin",
+        "django/db/models/lookups.py:BuiltinLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:LessThan": {
+      "bases": [
+        "django/db/models/lookups.py:FieldGetDbPrepValueMixin",
+        "django/db/models/lookups.py:BuiltinLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:LessThanOrEqual": {
+      "bases": [
+        "django/db/models/lookups.py:FieldGetDbPrepValueMixin",
+        "django/db/models/lookups.py:BuiltinLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:IntegerGreaterThanOrEqual": {
+      "bases": [
+        "django/db/models/lookups.py:IntegerFieldFloatRounding",
+        "django/db/models/lookups.py:GreaterThanOrEqual"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:IntegerLessThan": {
+      "bases": [
+        "django/db/models/lookups.py:IntegerFieldFloatRounding",
+        "django/db/models/lookups.py:LessThan"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:In": {
+      "bases": [
+        "django/db/models/lookups.py:FieldGetDbPrepValueIterableMixin",
+        "django/db/models/lookups.py:BuiltinLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:In.as_sql",
+        "process_rhs": "django/db/models/lookups.py:In.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:PatternLookup": {
+      "bases": [
+        "django/db/models/lookups.py:BuiltinLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:PatternLookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:Contains": {
+      "bases": [
+        "django/db/models/lookups.py:PatternLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:PatternLookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:IContains": {
+      "bases": [
+        "django/db/models/lookups.py:Contains"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:PatternLookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:StartsWith": {
+      "bases": [
+        "django/db/models/lookups.py:PatternLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:PatternLookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:IStartsWith": {
+      "bases": [
+        "django/db/models/lookups.py:StartsWith"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:PatternLookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:EndsWith": {
+      "bases": [
+        "django/db/models/lookups.py:PatternLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:PatternLookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:IEndsWith": {
+      "bases": [
+        "django/db/models/lookups.py:EndsWith"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:PatternLookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:Range": {
+      "bases": [
+        "django/db/models/lookups.py:FieldGetDbPrepValueIterableMixin",
+        "django/db/models/lookups.py:BuiltinLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:FieldGetDbPrepValueIterableMixin.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:IsNull": {
+      "bases": [
+        "django/db/models/lookups.py:BuiltinLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:IsNull.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:Regex": {
+      "bases": [
+        "django/db/models/lookups.py:BuiltinLookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:Regex.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:IRegex": {
+      "bases": [
+        "django/db/models/lookups.py:Regex"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:Regex.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:YearLookup": {
+      "bases": [
+        "django/db/models/lookups.py:Lookup"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:YearLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:YearExact": {
+      "bases": [
+        "django/db/models/lookups.py:YearLookup",
+        "django/db/models/lookups.py:Exact"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:YearLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:YearGt": {
+      "bases": [
+        "django/db/models/lookups.py:YearLookup",
+        "django/db/models/lookups.py:GreaterThan"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:YearLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:YearGte": {
+      "bases": [
+        "django/db/models/lookups.py:YearLookup",
+        "django/db/models/lookups.py:GreaterThanOrEqual"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:YearLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:YearLt": {
+      "bases": [
+        "django/db/models/lookups.py:YearLookup",
+        "django/db/models/lookups.py:LessThan"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:YearLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:YearLte": {
+      "bases": [
+        "django/db/models/lookups.py:YearLookup",
+        "django/db/models/lookups.py:LessThanOrEqual"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:YearLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:Lookup.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:UUIDIExact": {
+      "bases": [
+        "django/db/models/lookups.py:UUIDTextMixin",
+        "django/db/models/lookups.py:IExact"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:UUIDTextMixin.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:UUIDContains": {
+      "bases": [
+        "django/db/models/lookups.py:UUIDTextMixin",
+        "django/db/models/lookups.py:Contains"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:UUIDTextMixin.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:UUIDIContains": {
+      "bases": [
+        "django/db/models/lookups.py:UUIDTextMixin",
+        "django/db/models/lookups.py:IContains"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:UUIDTextMixin.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:UUIDStartsWith": {
+      "bases": [
+        "django/db/models/lookups.py:UUIDTextMixin",
+        "django/db/models/lookups.py:StartsWith"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:UUIDTextMixin.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:UUIDIStartsWith": {
+      "bases": [
+        "django/db/models/lookups.py:UUIDTextMixin",
+        "django/db/models/lookups.py:IStartsWith"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:UUIDTextMixin.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:UUIDEndsWith": {
+      "bases": [
+        "django/db/models/lookups.py:UUIDTextMixin",
+        "django/db/models/lookups.py:EndsWith"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:UUIDTextMixin.process_rhs"
+      }
+    },
+    "django/db/models/lookups.py:UUIDIEndsWith": {
+      "bases": [
+        "django/db/models/lookups.py:UUIDTextMixin",
+        "django/db/models/lookups.py:IEndsWith"
+      ],
+      "owners": {
+        "as_sql": "django/db/models/lookups.py:BuiltinLookup.as_sql",
+        "process_rhs": "django/db/models/lookups.py:UUIDTextMixin.process_rhs"
+      }
+    }
+  }
+}

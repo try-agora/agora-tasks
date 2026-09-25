@@ -1,0 +1,28 @@
+# Shared settings for all five arms; tool choice is --ek arm=<name>.
+jobs_dir: evals/jobs
+n_concurrent_trials: 1
+environment_build_timeout_multiplier: 3
+environment:
+  import_path: overlays.environment:OverlayEnvironment
+  override_memory_mb: 4096
+  extra_allowed_hosts:
+    - deb.debian.org
+    - nodejs.org
+    - registry.npmjs.org
+    - github.com
+    - release-assets.githubusercontent.com
+    - objects.githubusercontent.com
+    - pypi.org
+    - files.pythonhosted.org
+    - extension.ladybugdb.com
+agents:
+  - name: codex
+    model_name: openai/gpt-5.6-luna
+    extra_allowed_hosts:
+      - chatgpt.com
+      - auth.openai.com
+      - api.openai.com
+    kwargs:
+      version: "0.144.3"
+      reasoning_effort: low
+      web_search: disabled

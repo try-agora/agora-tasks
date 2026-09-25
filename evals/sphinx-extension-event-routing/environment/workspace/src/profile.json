@@ -1,0 +1,29 @@
+{
+  "builder": "html",
+  "config_overrides": {
+    "project": "Event routing audit",
+    "master_doc": "index",
+    "html_theme": "basic",
+    "extensions": [
+      "sphinx.ext.autodoc",
+      "sphinx.ext.napoleon",
+      "sphinx.ext.autosummary",
+      "sphinx.ext.intersphinx"
+    ],
+    "autodoc_typehints": "description",
+    "autodoc_preserve_defaults": true,
+    "autosummary_generate": false,
+    "intersphinx_mapping": {}
+  },
+  "events": [
+    "config-inited",
+    "builder-inited",
+    "autodoc-process-docstring",
+    "autodoc-process-signature",
+    "autodoc-before-process-signature",
+    "doctree-read",
+    "missing-reference",
+    "source-read",
+    "env-before-read-docs"
+  ]
+}

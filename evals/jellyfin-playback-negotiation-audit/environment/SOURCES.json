@@ -1,0 +1,11 @@
+{
+  "repository": "https://github.com/jellyfin/jellyfin",
+  "tag": "v10.10.7",
+  "commit": "aefb9b2cffca3ccb7a95d89af0d9fb2040de6ed3",
+  "selection": "All git-tracked .cs, .csproj, .sln, .props, and .targets files outside tests/, plus root LICENSE, README.md, and global.json. Unmodified bytes; no history, binaries, build outputs, or package downloads.",
+  "files": 1632,
+  "bytes": 7634794,
+  "license": "Upstream GPL v2; see workspace/src/jellyfin/LICENSE and original source notices. Not relicensed by the dataset.",
+  "source_digest": "c15c793cb68b0664fc7377fd0bc3e80acd6c187c7cc06397f51c1b3440560f88",
+  "digest_algorithm": "SHA-256 over files sorted by POSIX path relative to src: UTF-8 path + NUL + raw SHA-256(file bytes)."
+}

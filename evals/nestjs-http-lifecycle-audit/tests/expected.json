@@ -1,0 +1,45 @@
+{
+  "locations": {
+    "route_metadata": ["packages/core/router/paths-explorer.ts", "PathsExplorer.exploreMethodMetadata", "const routePath = Reflect.getMetadata(PATH_METADATA, prototypeCallback);"],
+    "route_registration": ["packages/core/router/router-explorer.ts", "RouterExplorer.applyCallbackToRouter", "routerMethodRef(path, routeHandler);"],
+    "request_scope": ["packages/core/router/router-explorer.ts", "RouterExplorer.createRequestScopedHandler", "const contextInstance = await this.injector.loadPerContext("],
+    "guard_call": ["packages/core/guards/guards-consumer.ts", "GuardsConsumer.tryActivate", "const result = guard.canActivate(context);"],
+    "guard_rejection": ["packages/core/router/router-execution-context.ts", "RouterExecutionContext.createGuardsFn", "throw new ForbiddenException(FORBIDDEN_MESSAGE);"],
+    "interceptor_call": ["packages/core/interceptors/interceptors-consumer.ts", "InterceptorsConsumer.intercept", "return interceptors[i].intercept(context, handler);"],
+    "body_parameter": ["packages/core/router/route-params-factory.ts", "RouteParamsFactory.exchangeKeyForValue", "return data && req.body ? req.body[data] : req.body;"],
+    "parameter_pipes": ["packages/core/router/router-execution-context.ts", "RouterExecutionContext.createPipesFn", "pipes.concat(paramPipes),"],
+    "pipe_call": ["packages/core/pipes/pipes-consumer.ts", "PipesConsumer.applyPipes", "const result = pipe.transform(val, { metatype, type, data });"],
+    "controller_call": ["packages/core/router/router-execution-context.ts", "RouterExecutionContext.create", "return callback.apply(instance, args);"],
+    "observable_result": ["packages/core/router/router-response-controller.ts", "RouterResponseController.transformToResult", "return lastValueFrom(resultOrDeferred);"],
+    "adapter_reply": ["packages/core/router/router-response-controller.ts", "RouterResponseController.apply", "return this.applicationRef.reply(response, result, httpStatusCode);"],
+    "express_body": ["packages/platform-express/adapters/express-adapter.ts", "ExpressAdapter.reply", "return isObject(body) ? response.json(body) : response.send(String(body));"],
+    "exception_boundary": ["packages/core/router/router-proxy.ts", "RouterProxy.createProxy", "exceptionsHandler.next(e, host);", 0],
+    "filter_precedence": ["packages/core/router/router-exception-filters.ts", "RouterExceptionFilters.create", "exceptionHandler.setCustomFilters(filters.reverse());"],
+    "filter_dispatch": ["packages/core/exceptions/exceptions-handler.ts", "ExceptionsHandler.invokeCustomFilters", "filter && filter.func(exception, ctx);"],
+    "fallback_exception": ["packages/core/exceptions/base-exception-filter.ts", "BaseExceptionFilter.catch", "applicationRef.reply(response, message, exception.getStatus());"]
+  },
+  "decisions": {
+    "guard_denial": "ForbiddenException",
+    "guard_short_circuits": true,
+    "pipe_scope_order": ["global", "controller", "method", "parameter"],
+    "pipes_for_one_argument": "sequential",
+    "different_arguments": "parallel",
+    "interceptor_can_skip_controller": true,
+    "ordinary_observable_value": "last",
+    "post_default_status": 201,
+    "response_decorator_auto_reply": false,
+    "passthrough_auto_reply": true,
+    "filter_scope_order": ["method", "controller", "global"],
+    "all_matching_filters_run": false
+  },
+  "decision_evidence": {
+    "metadata_scope": ["packages/core/helpers/context-creator.ts", "globalMetadata || ([] as T),", "classMetadata, contextId, inquirerId", "methodMetadata,"],
+    "guard_short_circuit": ["packages/core/guards/guards-consumer.ts", "for (const guard of guards)", "return false;"],
+    "sequential_pipes": ["packages/core/pipes/pipes-consumer.ts", "transforms.reduce(async (deferredValue, pipe)", "const val = await deferredValue;"],
+    "parameter_concurrency": ["packages/core/router/router-execution-context.ts", "await Promise.all(paramsOptions.map(resolveParamValue));"],
+    "status": ["packages/core/router/router-response-controller.ts", "case RequestMethod.POST:", "return HttpStatus.CREATED;"],
+    "status_constant": ["packages/common/enums/http-status.enum.ts", "CREATED = 201,"],
+    "passthrough": ["packages/core/router/router-execution-context.ts", "return hasResponseOrNextDecorator && !isPassthroughEnabled;", "!isResponseHandled &&"],
+    "single_filter": ["packages/common/utils/select-exception-filter-metadata.util.ts", "filters.find(", "exception instanceof ExceptionMetaType"]
+  }
+}

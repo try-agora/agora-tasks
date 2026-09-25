@@ -1,0 +1,44 @@
+{
+  "ranking": [
+    {
+      "helper": "django.utils.module_loading.import_string",
+      "caller_file_count": 29
+    },
+    {
+      "helper": "django.utils.encoding.force_str",
+      "caller_file_count": 19
+    },
+    {
+      "helper": "django.utils.safestring.mark_safe",
+      "caller_file_count": 18
+    },
+    {
+      "helper": "django.utils.encoding.force_bytes",
+      "caller_file_count": 16
+    },
+    {
+      "helper": "django.utils.timezone.make_aware",
+      "caller_file_count": 15
+    },
+    {
+      "helper": "django.utils.timezone.is_aware",
+      "caller_file_count": 13
+    },
+    {
+      "helper": "django.utils.html.format_html",
+      "caller_file_count": 10
+    },
+    {
+      "helper": "django.utils.crypto.get_random_string",
+      "caller_file_count": 7
+    },
+    {
+      "helper": "django.utils.crypto.salted_hmac",
+      "caller_file_count": 3
+    },
+    {
+      "helper": "django.utils.text.slugify",
+      "caller_file_count": 1
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+schema_version = "1.3"
+source = "Sphinx@71db08c05197545944949d5aa76cd340e7143627; framework registration and extension dependency audit"
+artifacts = ["/app/src/event-routing.json"]
+
+[task]
+name = "agora/sphinx-extension-event-routing"
+description = "Audit configured extension dependencies, callback registration, and priority-stable event dispatch."
+authors = [{ name = "Rakshith P" }]
+keywords = ["framework-navigation", "event-dispatch", "sphinx", "dependency-analysis", "structured-artifact"]
+
+[metadata]
+difficulty = "hard"
+category = "software-engineering"
+fixture = "upstream-source-and-runtime-resources"
+version = "1.0.0"
+
+[agent]
+timeout_sec = 1200
+user = "agent"
+
+[verifier]
+timeout_sec = 120
+user = "root"
+network_mode = "no-network"
+
+[environment]
+build_timeout_sec = 600
+cpus = 1
+memory_mb = 1024
+storage_mb = 2048
+network_mode = "no-network"
+workdir = "/app"

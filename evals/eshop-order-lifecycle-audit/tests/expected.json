@@ -1,0 +1,48 @@
+{
+  "locations": {
+    "checkout_quantities": ["eshop/src/Web/Pages/Basket/Checkout.cshtml.cs", "CheckoutModel.OnPost", "await _basketService.SetQuantities(BasketModel.Id, updateModel);"],
+    "checkout_order": ["eshop/src/Web/Pages/Basket/Checkout.cshtml.cs", "CheckoutModel.OnPost", "await _orderService.CreateOrderAsync(BasketModel.Id, new Address(\"123 Main St.\", \"Kent\", \"OH\", \"United States\", \"44240\"));"],
+    "checkout_delete": ["eshop/src/Web/Pages/Basket/Checkout.cshtml.cs", "CheckoutModel.OnPost", "await _basketService.DeleteBasketAsync(BasketModel.Id);"],
+    "quantity_write": ["eshop/src/ApplicationCore/Entities/BasketAggregate/BasketItem.cs", "BasketItem.SetQuantity", "Quantity = quantity;"],
+    "remove_empty": ["eshop/src/ApplicationCore/Entities/BasketAggregate/Basket.cs", "Basket.RemoveEmptyItems", "_items.RemoveAll(i => i.Quantity == 0);"],
+    "empty_guard": ["eshop/src/ApplicationCore/Extensions/GuardExtensions.cs", "BasketGuards.EmptyBasketOnCheckout", "throw new EmptyBasketOnCheckoutException();"],
+    "catalog_snapshot": ["eshop/src/ApplicationCore/Services/OrderService.cs", "OrderService.CreateOrderAsync", "var itemOrdered = new CatalogItemOrdered(catalogItem.Id, catalogItem.Name, _uriComposer.ComposePicUri(catalogItem.PictureUri));"],
+    "order_line": ["eshop/src/ApplicationCore/Services/OrderService.cs", "OrderService.CreateOrderAsync", "var orderItem = new OrderItem(itemOrdered, basketItem.UnitPrice, basketItem.Quantity);"],
+    "order_store": ["eshop/src/ApplicationCore/Services/OrderService.cs", "OrderService.CreateOrderAsync", "await _orderRepository.AddAsync(order);"],
+    "total_accumulation": ["eshop/src/ApplicationCore/Entities/OrderAggregate/Order.cs", "Order.Total", "total += item.UnitPrice * item.Units;"],
+    "repository_binding": ["eshop/src/Web/Configuration/ConfigureCoreServices.cs", "ConfigureCoreServices.AddCoreServices", "services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));"],
+    "order_service_binding": ["eshop/src/Web/Configuration/ConfigureCoreServices.cs", "ConfigureCoreServices.AddCoreServices", "services.AddScoped<IOrderService, OrderService>();"],
+    "mediator_registration": ["eshop/src/Web/Configuration/ConfigureWebServices.cs", "ConfigureWebServices.AddWebServices", "cfg.RegisterServicesFromAssembly(typeof(BasketViewModelService).Assembly));"],
+    "detail_dispatch": ["eshop/src/Web/Controllers/OrderController.cs", "OrderController.Detail", "var viewModel = await _mediator.Send(new GetOrderDetails(User.Identity.Name, orderId));"],
+    "detail_lookup": ["eshop/src/Web/Features/OrderDetails/GetOrderDetailsHandler.cs", "GetOrderDetailsHandler.Handle", "var order = await _orderRepository.FirstOrDefaultAsync(spec, cancellationToken);"],
+    "detail_predicate": ["eshop/src/ApplicationCore/Specifications/OrderWithItemsByIdSpec.cs", "OrderWithItemsByIdSpec.OrderWithItemsByIdSpec", ".Where(order => order.Id == orderId)"],
+    "list_lookup": ["eshop/src/Web/Features/MyOrders/GetMyOrdersHandler.cs", "GetMyOrdersHandler.Handle", "var orders = await _orderRepository.ListAsync(specification, cancellationToken);"],
+    "list_predicate": ["eshop/src/ApplicationCore/Specifications/CustomerOrdersSpecification.cs", "CustomerOrdersSpecification.CustomerOrdersSpecification", "Query.Where(o => o.BuyerId == buyerId)"]
+  },
+  "decisions": {
+    "checkout_call_order": ["set_quantities", "create_order", "delete_basket"],
+    "quantity_guard_minimum": 0,
+    "zero_quantity_removed": true,
+    "unit_price_origin": "basket",
+    "display_fields_origin": "catalog_snapshot",
+    "total_uses_order_lines": true,
+    "adding_existing_item_reprices": false,
+    "detail_handler_uses_username": false,
+    "list_spec_filters_buyer": true,
+    "detail_spec_filters_buyer": false,
+    "missing_detail_response": "BadRequest",
+    "empty_checkout_redirect": "/Basket/Index",
+    "delete_after_create_throws": false,
+    "order_service_lifetime": "scoped",
+    "explicit_checkout_transaction": false
+  },
+  "decision_evidence": {
+    "post_sequence_and_failure": ["eshop/src/Web/Pages/Basket/Checkout.cshtml.cs", "await _basketService.SetQuantities(BasketModel.Id, updateModel);", "catch (EmptyBasketOnCheckoutException emptyBasketOnCheckoutException)", "return RedirectToPage(\"/Basket/Index\");"],
+    "quantity_bounds": ["eshop/src/ApplicationCore/Entities/BasketAggregate/BasketItem.cs", "Guard.Against.OutOfRange(quantity, nameof(quantity), 0, int.MaxValue);"],
+    "remove_after_update": ["eshop/src/ApplicationCore/Services/BasketService.cs", "item.SetQuantity(quantity);", "basket.RemoveEmptyItems();", "await _basketRepository.UpdateAsync(basket);"],
+    "existing_item": ["eshop/src/ApplicationCore/Entities/BasketAggregate/Basket.cs", "var existingItem = Items.First(i => i.CatalogItemId == catalogItemId);", "existingItem.AddQuantity(quantity);"],
+    "detail_projection": ["eshop/src/Web/Features/OrderDetails/GetOrderDetailsHandler.cs", "var spec = new OrderWithItemsByIdSpec(request.OrderId);", "PictureUrl = oi.ItemOrdered.PictureUri,", "ProductName = oi.ItemOrdered.ProductName,", "Total = order.Total()"],
+    "missing_detail": ["eshop/src/Web/Controllers/OrderController.cs", "if (viewModel == null)", "return BadRequest(\"No such order found for this user.\");"],
+    "list_customer": ["eshop/src/Web/Features/MyOrders/GetMyOrdersHandler.cs", "var specification = new CustomerOrdersSpecification(request.UserName);"]
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "scenarios": {
+    "model_first": {
+      "sql_count": 1,
+      "cache_populated": true,
+      "path": [
+        {
+          "file": "django/db/models/query.py",
+          "symbol": "QuerySet.__iter__",
+          "call_line": 321
+        },
+        {
+          "file": "django/db/models/query.py",
+          "symbol": "QuerySet._fetch_all",
+          "call_line": 1647
+        },
+        {
+          "file": "django/db/models/query.py",
+          "symbol": "ModelIterable.__iter__",
+          "call_line": 58
+        },
+        {
+          "file": "django/db/models/sql/compiler.py",
+          "symbol": "SQLCompiler.execute_sql",
+          "call_line": 1380
+        },
+        {
+          "file": "django/db/backends/utils.py",
+          "symbol": "CursorWrapper.execute",
+          "call_line": 67
+        },
+        {
+          "file": "django/db/backends/utils.py",
+          "symbol": "CursorWrapper._execute_with_wrappers",
+          "call_line": 80
+        },
+        {
+          "file": "django/db/backends/utils.py",
+          "symbol": "CursorWrapper._execute",
+          "call_line": 89
+        },
+        {
+          "file": "django/db/backends/sqlite3/base.py",
+          "symbol": "SQLiteCursorWrapper.execute",
+          "call_line": null
+        }
+      ]
+    },
+    "model_cached": {
+      "sql_count": 0,
+      "cache_populated": true,
+      "path": []
+    },
+    "flat_first": {
+      "sql_count": 1,
+      "cache_populated": true,
+      "path": [
+        {
+          "file": "django/db/models/query.py",
+          "symbol": "QuerySet.__iter__",
+          "call_line": 321
+        },
+        {
+          "file": "django/db/models/query.py",
+          "symbol": "QuerySet._fetch_all",
+          "call_line": 1647
+        },
+        {
+          "file": "django/db/models/query.py",
+          "symbol": "FlatValuesListIterable.__iter__",
+          "call_line": 208
+        },
+        {
+          "file": "django/db/models/sql/compiler.py",
+          "symbol": "SQLCompiler.results_iter",
+          "call_line": 1331
+        },
+        {
+          "file": "django/db/models/sql/compiler.py",
+          "symbol": "SQLCompiler.execute_sql",
+          "call_line": 1380
+        },
+        {
+          "file": "django/db/backends/utils.py",
+          "symbol": "CursorWrapper.execute",
+          "call_line": 67
+        },
+        {
+          "file": "django/db/backends/utils.py",
+          "symbol": "CursorWrapper._execute_with_wrappers",
+          "call_line": 80
+        },
+        {
+          "file": "django/db/backends/utils.py",
+          "symbol": "CursorWrapper._execute",
+          "call_line": 89
+        },
+        {
+          "file": "django/db/backends/sqlite3/base.py",
+          "symbol": "SQLiteCursorWrapper.execute",
+          "call_line": null
+        }
+      ]
+    },
+    "exists_first": {
+      "sql_count": 1,
+      "cache_populated": false,
+      "path": [
+        {
+          "file": "django/db/models/query.py",
+          "symbol": "QuerySet.exists",
+          "call_line": 1022
+        },
+        {
+          "file": "django/db/models/sql/query.py",
+          "symbol": "Query.has_results",
+          "call_line": 583
+        },
+        {
+          "file": "django/db/models/sql/compiler.py",
+          "symbol": "SQLCompiler.has_results",
+          "call_line": 1348
+        },
+        {
+          "file": "django/db/models/sql/compiler.py",
+          "symbol": "SQLCompiler.execute_sql",
+          "call_line": 1380
+        },
+        {
+          "file": "django/db/backends/utils.py",
+          "symbol": "CursorWrapper.execute",
+          "call_line": 67
+        },
+        {
+          "file": "django/db/backends/utils.py",
+          "symbol": "CursorWrapper._execute_with_wrappers",
+          "call_line": 80
+        },
+        {
+          "file": "django/db/backends/utils.py",
+          "symbol": "CursorWrapper._execute",
+          "call_line": 89
+        },
+        {
+          "file": "django/db/backends/sqlite3/base.py",
+          "symbol": "SQLiteCursorWrapper.execute",
+          "call_line": null
+        }
+      ]
+    }
+  },
+  "bindings": {
+    "compiler_selector": {
+      "file": "django/db/models/sql/query.py",
+      "symbol": "Query.get_compiler",
+      "call_line": 296,
+      "target": "django.db.backends.base.operations.BaseDatabaseOperations.compiler"
+    },
+    "compiler_class": {
+      "file": "django/db/backends/base/operations.py",
+      "symbol": "BaseDatabaseOperations.compiler",
+      "call_line": 369,
+      "target": "django.db.models.sql.compiler.SQLCompiler"
+    },
+    "cursor_factory": {
+      "file": "django/db/backends/base/base.py",
+      "symbol": "BaseDatabaseWrapper._cursor",
+      "call_line": 301,
+      "target": "django.db.backends.sqlite3.base.DatabaseWrapper.create_cursor"
+    },
+    "driver_execute": {
+      "file": "django/db/backends/sqlite3/base.py",
+      "symbol": "SQLiteCursorWrapper.execute",
+      "call_line": 357,
+      "target": "sqlite3.dbapi2.Cursor.execute"
+    }
+  }
+}
