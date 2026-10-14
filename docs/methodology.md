@@ -91,6 +91,78 @@ Harbor's usage. Otherwise their cost is unmeasured, and the composite is not a c
 end-to-end efficiency comparison. Include capture work from the first stage as well as
 later retrieval; reporting only a cheap second stage would hide memory's acquisition cost.
 
+## Product capture→reuse
+
+`scripts/check_reuse_job.py` audits the version 1 evidence tree without starting a
+container or model. It fails closed on incomplete or mixed pins, suite-checksum drift,
+verifier edits, reused principals, cross-step calls, unsettled capture jobs, non-human
+acceptance, instruction changes, duplicate cursor effects, failed verification, and
+missing semantic review. A receipt requires `executor: "ported"` and `accept: "person"`.
+Other runs are labeled `plumbing`; every verdict prints the acceptance policy. Actor
+class comes from each call principal's credential source: `session` is human, while
+`bearer` and `turn` are agents. The checker recomputes the suite task checksum, covering
+the verifier filenames and bytes, and rejects every recorded edit under a verifier path.
+It also requires ordered job `started_at` and `finished_at` values, the declared
+`n_total_trials`, and all six progress counters: `n_completed_trials` must equal the
+total, while `n_errored_trials`, `n_running_trials`, `n_pending_trials`,
+`n_cancelled_trials`, and `n_retries` must be zero. The final step's reward must still
+come from the unchanged verifier.
+
+A reuse event joins four records: a claim accepted by a person, a completed retrieval
+by the second agent principal whose result contains that claim, the successful call-log
+row with the same call identity and principal, and a later edit by that principal to a
+repository file cited by the claim. The second session's native event stream decides
+the retrieval identity, strict retrieval-before-edit order, edited file, and principal;
+both events must occur in that stream and name the declared second principal. The call
+log corroborates the retrieval identity, principal, credential class, tool, result,
+outcome, and session window. The trajectory supplies the exact instruction and final
+message for citation reporting, never join order or binding. An explicit claim identifier
+in the final message or native edit is reported as `cited`, but is not required.
+
+At the default threshold, proposal disclosure rejects when either of two measures reaches
+0.5: five-token shingle containment relative to the shorter text, or the share of the
+instruction's distinct tokens that appear anywhere in the proposal. The unordered measure
+requires at least five shared distinct tokens, so a short instruction or a few incidental
+common words do not fail by ratio alone. Shingle containment still catches contiguous
+copying, while distinct-token coverage catches reordered fragments and padding.
+
+Retrieval tools are the served catalog's read-only set: `affected_graph`,
+`explain_graph`, `explore_graph`, `graph_status`, `list_calls`, `list_documents`,
+`list_knowledge`, `list_repository_tree`, `path_graph`, `query_graph`, `read_document`,
+`read_implementation`, `read_implementation_graph`, `read_plan`, `read_reference`,
+`read_repository_file`, `recall_memory`, `trace_graph`, and `traverse_knowledge`.
+Mutating and unknown tool names fail closed even when their results carry an accepted
+claim.
+
+For an applied claim, the JSON includes a review template and its suggested
+evidence-tree path. The checker does not write that path by default. Pass
+`--review-output PATH` to write the single generated template to a caller-chosen path;
+`written_files` lists every path written and is otherwise empty. The event remains
+`pending-review` until the evidence tree already contains `review.json` naming a
+reviewer, an `applies` verdict, and a time.
+
+`scripts/score_reuse.py` emits the separate `capture-reuse-v1` scorecard. Each task and
+arm cell reports its denominator and these raw dimensions:
+
+- verified, pending-review, and absent reuse events;
+- second-step tool calls, shell executions, and files read;
+- first-plus-second-step agent tokens, second-step tokens, and product input plus
+  output tokens;
+- agent, capture, acceptance, and human-wait seconds; and
+- the `completion-efficiency-v1` mean recomputed from the supplied jobs.
+
+Tokens saved are the matched baseline mean for both steps minus the product-arm mean
+for both steps and product-side usage. A `source: "fixture"` usage record contributes
+zero and is labeled in its cell. Missing product usage yields a null product composite
+and a nonzero exit; a missing matched baseline suppresses tokens saved. Protocol mode
+requires the declared 12 unique one-trial jobs for two tasks, two arms, and three
+attempts, and refuses retries rather than imputing them.
+
+Verification counts are copied from these suite commands at this revision:
+
+- `uv run python -m unittest discover -s scripts -p 'test_*.py'` printed `Ran 41 tests`.
+- `uv run python scripts/check.py` printed `Validated 25 tasks; 81 verifier scenarios`.
+
 ## Comparing tools
 
 Hold task revision, agent version, model, budgets, network access, and repetitions fixed.
