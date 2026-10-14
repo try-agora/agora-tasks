@@ -8,6 +8,8 @@ from pathlib import Path
 import re
 import sys
 
+from dirhash import dirhash
+
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_PINS = {
@@ -102,6 +104,17 @@ def principal_id(row):
     return principal.get("id") if isinstance(principal, dict) else principal
 
 
+def credential_class(row):
+    principal = row.get("principal")
+    source = principal.get("source") if isinstance(principal, dict) else None
+    require(source in {"session", "bearer", "turn"}, "Missing call credential source")
+    return "human" if source == "session" else "agent"
+
+
+def call_identity(row):
+    return row.get("call_id") or row.get("id")
+
+
 def check_principals(product, stages, names):
     value = load_json(product / "principals.json")
     declared = value.get("steps") if isinstance(value.get("steps"), dict) else value
@@ -127,6 +140,7 @@ def check_principals(product, stages, names):
         actor = principal_id(row)
         if actor not in agents:
             continue
+        require(credential_class(row) == "agent", "Step principal used a human credential")
         when = parse_time(row.get("recordedAt"), "Invalid call timestamp")
         own = agents.index(actor)
         other = 1 - own
@@ -186,18 +200,23 @@ def proposal_state(proposal):
     return history[-1].get("state") if history else proposal.get("state")
 
 
-def accepted_claims(product, human, agents, policy):
+def accepted_claims(product, human, agents, calls, policy):
     proposals = load_json(product / "proposals.json")
     require(isinstance(proposals, list), "Invalid proposals evidence")
     acceptances = load_jsonl(product / "acceptance.jsonl")
     for row in acceptances:
         if row.get("decision") == "accepted":
-            require(row.get("actor_class") == "human", "Accepted proposals require a human actor")
             require(row.get("policy") == policy, "Acceptance policy differs from pins.json")
             require(
                 row.get("actor_id") == human and row.get("actor_id") not in agents,
                 "Acceptance actor differs from the declared human principal",
             )
+            classes = {
+                credential_class(call)
+                for call in calls
+                if principal_id(call) == row.get("actor_id")
+            }
+            require(classes == {"human"}, "Accepted proposal lacks one human credential class")
 
     claims = {}
     for proposal in proposals:
@@ -209,7 +228,7 @@ def accepted_claims(product, human, agents, policy):
             if row.get("proposal_id") == proposal.get("id")
             and row.get("revision") == proposal.get("revision")
             and row.get("decision") == "accepted"
-            and row.get("actor_class") == "human"
+            and row.get("actor_id") == human
         ]
         require(len(matched) == 1, "Each accepted proposal revision needs one human acceptance")
         ids = proposal_claims(proposal)
@@ -242,27 +261,29 @@ def task_instruction(atif):
     return messages[-1]
 
 
-def edited_paths(value):
+def edited_paths(value, principal=None):
     found = set()
 
-    def visit(item):
+    def visit(item, owner=None):
         if isinstance(item, dict):
+            owner = principal_id(item) or owner
             for key, child in item.items():
                 if key in {"file_edits", "files_changed", "changes"} and isinstance(child, list):
                     for edit in child:
                         path = edit.get("path") if isinstance(edit, dict) else edit
-                        if isinstance(path, str):
+                        edit_owner = principal_id(edit) if isinstance(edit, dict) else owner
+                        if isinstance(path, str) and (principal is None or edit_owner == principal):
                             found.add(path.removeprefix("/app/"))
-                visit(child)
+                visit(child, owner)
         elif isinstance(item, list):
             for child in item:
-                visit(child)
+                visit(child, owner)
 
     visit(value)
     return found
 
 
-def stream_edits(stream, after):
+def stream_edits(stream, after, principal):
     items = []
     for event in stream[after + 1 :]:
         item = event.get("item") or {}
@@ -272,16 +293,16 @@ def stream_edits(stream, after):
             and item.get("status") == "completed"
         ):
             items.append(item)
-    return edited_paths(items), items
+    return edited_paths(items, principal), items
 
 
-def atif_edits_after_retrieval(atif, claim_id):
+def atif_edits_after_retrieval(atif, claim_id, principal):
     steps = atif.get("steps") or []
     for index, step in enumerate(steps):
         raw = json.dumps(step, sort_keys=True)
         if claim_id in raw and "recall" in raw:
             later = steps[index + 1 :]
-            return edited_paths(later), later
+            return edited_paths(later, principal), later
     return set(), []
 
 
@@ -296,8 +317,12 @@ def overlap(left, right, size=5):
             return {tuple(words)} if words else set()
         return {tuple(words[index : index + size]) for index in range(len(words) - size + 1)}
 
-    proposal = grams(right)
-    return len(grams(left) & proposal) / len(proposal) if proposal else 0
+    instruction, proposal = grams(left), grams(right)
+    return (
+        len(instruction & proposal) / min(len(instruction), len(proposal))
+        if instruction and proposal
+        else 0
+    )
 
 
 def check_instruction(task, step, atif, proposals, threshold):
@@ -319,6 +344,23 @@ def evidence_paths(claim):
         if isinstance(ref, str) and ref.startswith("repo://"):
             paths.add(ref.removeprefix("repo://").split("#", 1)[0].lstrip("/"))
     return paths
+
+
+def check_verifier_unchanged(trial, task, names):
+    verifier_roots = {"tests", *(f"steps/{name}/tests" for name in names)}
+    edits = set()
+    for name in names:
+        agent = trial / f"steps/{name}/agent"
+        edits |= edited_paths(load_json(agent / "trajectory.json"))
+        edits |= edited_paths(native_events(agent / "codex.txt"))
+    require(
+        not any(
+            path == root or path.startswith(f"{root}/") or f"/{root}/" in path
+            for path in edits
+            for root in verifier_roots
+        ),
+        "Recorded edit touched verifier material",
+    )
 
 
 def reward(stage):
@@ -361,14 +403,17 @@ def audit_trial(trial, *, receipt=False, overlap_threshold=0.5):
     require(all(isinstance(pins[key], str) and pins[key] for key in REQUIRED_PINS), "Invalid pins.json")
     for key, allowed in PIN_VALUES.items():
         require(pins[key] in allowed, f"Invalid {key} pin")
-    require(pins["task_checksum"] == result.get("task_checksum"), "pins task_checksum differs from trial")
+    checksum = dirhash(ROOT / "evals" / task, "sha256")
+    require(pins["task_checksum"] == checksum, "pins task_checksum differs from suite task checksum")
+    require(result.get("task_checksum") == checksum, "trial task_checksum differs from suite task checksum")
+    check_verifier_unchanged(trial, task, names)
     if receipt:
         require(pins["executor"] == "ported", "--receipt requires executor == ported")
         require(pins["accept"] == "person", "--receipt requires accept == person")
 
     _, agents, human, executor, calls = check_principals(product, stages, names)
     check_capture(trial, product, executor, names[0])
-    claims, proposals = accepted_claims(product, human, agents, pins["accept"])
+    claims, proposals = accepted_claims(product, human, agents, calls, pins["accept"])
     atif = load_json(trial / f"steps/{names[1]}/agent/trajectory.json")
     check_instruction(task, names[1], atif, proposals, overlap_threshold)
 
@@ -378,6 +423,7 @@ def audit_trial(trial, *, receipt=False, overlap_threshold=0.5):
         for index, event in enumerate(stream)
         if event.get("type") == "item.completed"
         and event.get("item", {}).get("type") == "mcp_tool_call"
+        and principal_id(event["item"]) == agents[1]
         and event["item"].get("server") == "agora"
         and event["item"].get("status") == "completed"
         and not event["item"].get("error")
@@ -409,16 +455,19 @@ def audit_trial(trial, *, receipt=False, overlap_threshold=0.5):
             row
             for row in calls
             if principal_id(row) == agents[1]
+            and credential_class(row) == "agent"
+            and call_identity(row) == retrieval.get("id")
             and row.get("tool") == retrieval.get("tool")
             and row.get("outcome") == "succeeded"
+            and retrieved in json.dumps(row.get("result"), sort_keys=True)
             and stage_2_start
             <= parse_time(row.get("recordedAt"), "Invalid call timestamp")
             <= stage_2_end
         ]
         require(bool(matching_calls), "Retrieved claim is missing from the step 2 call log")
         claim = claims[retrieved]
-        stream_paths, stream_evidence = stream_edits(stream, retrieval_index)
-        atif_paths, atif_evidence = atif_edits_after_retrieval(atif, retrieved)
+        stream_paths, stream_evidence = stream_edits(stream, retrieval_index, agents[1])
+        atif_paths, atif_evidence = atif_edits_after_retrieval(atif, retrieved, agents[1])
         edits = stream_paths | atif_paths
         edit_evidence = stream_evidence + atif_evidence
         explicit_ids = [retrieved, claim.get("artifact_id")]

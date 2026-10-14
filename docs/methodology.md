@@ -94,18 +94,24 @@ later retrieval; reporting only a cheap second stage would hide memory's acquisi
 ## Product capture→reuse
 
 `scripts/check_reuse_job.py` audits the version 1 evidence tree without starting a
-container or model. It fails closed on incomplete or mixed pins, reused principals,
-cross-step calls, unsettled capture jobs, non-human acceptance, instruction changes,
-duplicate cursor effects, failed verification, and missing semantic review. A receipt
-requires `executor: "ported"` and `accept: "person"`. Other runs are labeled
-`plumbing`; every verdict prints the acceptance policy.
+container or model. It fails closed on incomplete or mixed pins, suite-checksum drift,
+verifier edits, reused principals, cross-step calls, unsettled capture jobs, non-human
+acceptance, instruction changes, duplicate cursor effects, failed verification, and
+missing semantic review. A receipt requires `executor: "ported"` and `accept: "person"`.
+Other runs are labeled `plumbing`; every verdict prints the acceptance policy. Actor
+class comes from each call principal's credential source: `session` is human, while
+`bearer` and `turn` are agents. The checker recomputes the suite task checksum, covering
+the verifier filenames and bytes, and rejects every recorded edit under a verifier path.
 
 A reuse event joins four records: a claim accepted by a person, a completed retrieval
-by the second agent principal, the corresponding call-log row, and a later edit to a
+by the second agent principal whose result contains that claim, the successful call-log
+row with the same call identity and principal, and a later edit by that principal to a
 repository file cited by the claim. An explicit claim identifier in the final message
-or edit is reported as `cited`, but is not required. The checker writes `review.md`
-with the claim, message context, and edited files. The event remains `pending-review`
-until `review.json` names a reviewer, an `applies` verdict, and a time.
+or edit is reported as `cited`, but is not required. Proposal disclosure uses five-token
+shingle containment relative to the shorter text and rejects values at or above 0.5, so
+padding cannot dilute a copied instruction. The checker writes `review.md` with the
+claim, message context, and edited files. The event remains `pending-review` until
+`review.json` names a reviewer, an `applies` verdict, and a time.
 
 `scripts/score_reuse.py` emits the separate `capture-reuse-v1` scorecard. Each task and
 arm cell reports its denominator and these raw dimensions:
@@ -115,7 +121,7 @@ arm cell reports its denominator and these raw dimensions:
 - first-plus-second-step agent tokens, second-step tokens, and product input plus
   output tokens;
 - agent, capture, acceptance, and human-wait seconds; and
-- the unchanged `completion-efficiency-v1` mean.
+- the `completion-efficiency-v1` mean recomputed from the supplied jobs.
 
 Tokens saved are the matched baseline mean for both steps minus the product-arm mean
 for both steps and product-side usage. A `source: "fixture"` usage record contributes

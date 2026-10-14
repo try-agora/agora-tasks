@@ -7,6 +7,8 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
+from dirhash import dirhash
+
 from check_reuse_job import audit_campaign
 from check_overlay_job import check_setup
 
@@ -28,6 +30,10 @@ def write_json(path, value, lines=False):
         path.write_text(json.dumps(value))
 
 
+def task_checksum(task=TASK):
+    return dirhash(ROOT / "evals" / task, "sha256")
+
+
 def pins(**changes):
     value = {
         "server_sha": "server-sha",
@@ -38,7 +44,7 @@ def pins(**changes):
         "hook_version": "1",
         "executor": "ported",
         "agora_tasks_sha": "tasks-sha",
-        "task_checksum": "task-checksum",
+        "task_checksum": task_checksum(),
         "harbor_version": "0.23.0",
         "codex_version": "0.144.3",
         "model": "model",
@@ -48,7 +54,7 @@ def pins(**changes):
     return value
 
 
-def result(reward=1, checksum="task-checksum"):
+def result(reward=1, checksum=None):
     stages = []
     for name in STEPS:
         start, end = TIMES[name]
@@ -67,7 +73,7 @@ def result(reward=1, checksum="task-checksum"):
     return {
         "task_name": f"agora/{TASK}",
         "trial_name": "trial-1",
-        "task_checksum": checksum,
+        "task_checksum": checksum or task_checksum(),
         "finished_at": "2026-10-14T00:00:50+00:00",
         "step_results": stages,
     }
@@ -158,15 +164,32 @@ def make_job(root, name="job-1", *, executor="ported", accept="person"):
         [
             {
                 "tool": "ingest",
-                "principal": {"id": "agent-a"},
+                "call_id": "ingest-call",
+                "principal": {"id": "agent-a", "source": "turn"},
                 "recordedAt": "2026-10-14T00:00:15+00:00",
                 "outcome": "succeeded",
             },
             {
+                "tool": "settle_capture",
+                "call_id": "settle-call",
+                "principal": {"id": "agent-executor", "source": "turn"},
+                "recordedAt": "2026-10-14T00:00:22+00:00",
+                "outcome": "succeeded",
+            },
+            {
+                "tool": "accept_proposal",
+                "call_id": "accept-call",
+                "principal": {"id": "person-reviewer", "source": "session"},
+                "recordedAt": "2026-10-14T00:00:25+00:00",
+                "outcome": "succeeded",
+            },
+            {
                 "tool": "recall_memory",
-                "principal": {"id": "agent-b"},
+                "call_id": "retrieval-call",
+                "principal": {"id": "agent-b", "source": "turn"},
                 "recordedAt": "2026-10-14T00:00:35+00:00",
                 "outcome": "succeeded",
+                "result": {"content": [{"type": "text", "text": "claim-1"}]},
             },
         ],
         lines=True,
@@ -185,7 +208,16 @@ def make_job(root, name="job-1", *, executor="ported", accept="person"):
                 {
                     "source": "agent",
                     "message": "Applied the retrieved convention.",
-                    "file_edits": ["/app/src/microapp/middleware.py"] if step == STEPS[1] else [],
+                    "file_edits": (
+                        [
+                            {
+                                "path": "/app/src/microapp/middleware.py",
+                                "principal": {"id": "agent-b"},
+                            }
+                        ]
+                        if step == STEPS[1]
+                        else []
+                    ),
                 },
             ]
         }
@@ -197,6 +229,8 @@ def make_job(root, name="job-1", *, executor="ported", accept="person"):
                     "type": "item.completed",
                     "item": {
                         "type": "mcp_tool_call",
+                        "id": "retrieval-call",
+                        "principal": {"id": "agent-b"},
                         "server": "agora",
                         "tool": "recall_memory",
                         "status": "completed",
@@ -212,7 +246,11 @@ def make_job(root, name="job-1", *, executor="ported", accept="person"):
                         "type": "file_change",
                         "status": "completed",
                         "changes": [
-                            {"path": "/app/src/microapp/middleware.py", "kind": "update"}
+                            {
+                                "path": "/app/src/microapp/middleware.py",
+                                "kind": "update",
+                                "principal": {"id": "agent-b"},
+                            }
                         ],
                     },
                 }
@@ -289,8 +327,7 @@ class ReuseEvidence(unittest.TestCase):
             acceptance = trial / "environment/product/acceptance.jsonl"
             row = json.loads(acceptance.read_text())
             write_json(acceptance, [{**row, "actor_class": "agent"}], lines=True)
-            with self.assertRaisesRegex(ValueError, "human"):
-                audit_campaign([job])
+            audit_campaign([job])
             write_json(acceptance, [row], lines=True)
             calls = trial / "environment/product/calls.jsonl"
             records = [json.loads(line) for line in calls.read_text().splitlines()]
@@ -298,6 +335,28 @@ class ReuseEvidence(unittest.TestCase):
             write_json(calls, records, lines=True)
             with self.assertRaisesRegex(ValueError, "window"):
                 audit_campaign([job])
+
+    def test_acceptance_class_comes_from_the_call_credential(self):
+        with tempfile.TemporaryDirectory() as directory:
+            job, trial = make_job(Path(directory))
+            calls = trial / "environment/product/calls.jsonl"
+            records = [json.loads(line) for line in calls.read_text().splitlines()]
+            records[2]["principal"]["source"] = "bearer"
+            write_json(calls, records, lines=True)
+            with self.assertRaisesRegex(ValueError, "human credential"):
+                audit_campaign([job], receipt=True)
+
+            principals = trial / "environment/product/principals.json"
+            declared = json.loads(principals.read_text())
+            declared["human"] = declared["executor"]
+            write_json(principals, declared)
+            acceptance = trial / "environment/product/acceptance.jsonl"
+            accepted = json.loads(acceptance.read_text())
+            accepted["actor_id"] = declared["executor"]
+            accepted["actor_class"] = "human"
+            write_json(acceptance, [accepted], lines=True)
+            with self.assertRaisesRegex(ValueError, "human credential"):
+                audit_campaign([job], receipt=True)
 
     def test_only_an_accepted_claim_is_a_reuse_event(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -334,6 +393,69 @@ class ReuseEvidence(unittest.TestCase):
                 "retrieved-unapplied",
             )
 
+    def test_edit_must_belong_to_the_retrieving_principal(self):
+        with tempfile.TemporaryDirectory() as directory:
+            job, trial = make_job(Path(directory))
+            trajectory = trial / f"steps/{STEPS[1]}/agent/trajectory.json"
+            atif = json.loads(trajectory.read_text())
+            atif["steps"][-1]["file_edits"][0]["principal"]["id"] = "agent-c"
+            write_json(trajectory, atif)
+            stream = trial / f"steps/{STEPS[1]}/agent/codex.txt"
+            events = [json.loads(line) for line in stream.read_text().splitlines()]
+            events[-1]["item"]["changes"][0]["principal"]["id"] = "agent-c"
+            write_json(stream, events, lines=True)
+            self.assertEqual(
+                audit_campaign([job])["trials"][0]["reuse"],
+                "retrieved-unapplied",
+            )
+
+    def test_edit_must_touch_the_claims_cited_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            job, trial = make_job(Path(directory))
+            trajectory = trial / f"steps/{STEPS[1]}/agent/trajectory.json"
+            atif = json.loads(trajectory.read_text())
+            atif["steps"][-1]["file_edits"][0]["path"] = "/app/src/unrelated.py"
+            write_json(trajectory, atif)
+            stream = trial / f"steps/{STEPS[1]}/agent/codex.txt"
+            events = [json.loads(line) for line in stream.read_text().splitlines()]
+            events[-1]["item"]["changes"][0]["path"] = "/app/src/unrelated.py"
+            write_json(stream, events, lines=True)
+            self.assertEqual(
+                audit_campaign([job])["trials"][0]["reuse"],
+                "retrieved-unapplied",
+            )
+
+    def test_retrieval_call_log_row_must_have_the_same_call_identity(self):
+        with tempfile.TemporaryDirectory() as directory:
+            job, trial = make_job(Path(directory))
+            stream = trial / f"steps/{STEPS[1]}/agent/codex.txt"
+            events = [json.loads(line) for line in stream.read_text().splitlines()]
+            events[0]["item"]["id"] = "retrieval-with-claim"
+            write_json(stream, events, lines=True)
+            calls = trial / "environment/product/calls.jsonl"
+            records = [json.loads(line) for line in calls.read_text().splitlines()]
+            records[-1]["call_id"] = "different-call"
+            records[-1]["result"] = {
+                "content": [{"type": "text", "text": "unrelated"}]
+            }
+            write_json(calls, records, lines=True)
+            with self.assertRaisesRegex(ValueError, "call log"):
+                audit_campaign([job], receipt=True)
+
+    def test_retrieval_call_log_row_binds_principal_and_claim(self):
+        for field, value in (
+            ("principal", {"id": "agent-c", "source": "turn"}),
+            ("result", {"content": [{"type": "text", "text": "unrelated"}]}),
+        ):
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as directory:
+                job, trial = make_job(Path(directory))
+                calls = trial / "environment/product/calls.jsonl"
+                records = [json.loads(line) for line in calls.read_text().splitlines()]
+                records[-1][field] = value
+                write_json(calls, records, lines=True)
+                with self.assertRaisesRegex(ValueError, "call log"):
+                    audit_campaign([job], receipt=True)
+
     def test_failed_verifier_is_not_verified(self):
         with tempfile.TemporaryDirectory() as directory:
             job, trial = make_job(Path(directory))
@@ -341,6 +463,40 @@ class ReuseEvidence(unittest.TestCase):
             self.assertEqual(
                 audit_campaign([job])["trials"][0]["reuse"], "failed-verifier"
             )
+
+    def test_task_checksum_is_computed_and_verifier_edits_are_refused(self):
+        with tempfile.TemporaryDirectory() as directory:
+            job, trial = make_job(Path(directory))
+            pin_path = trial / "environment/product/pins.json"
+            pinned = json.loads(pin_path.read_text())
+            pinned["task_checksum"] = "archive-controlled"
+            write_json(pin_path, pinned)
+            record_path = trial / "result.json"
+            record = json.loads(record_path.read_text())
+            record["task_checksum"] = "archive-controlled"
+            write_json(record_path, record)
+            with self.assertRaisesRegex(ValueError, "suite task checksum"):
+                audit_campaign([job], receipt=True)
+
+            pinned["task_checksum"] = task_checksum()
+            write_json(pin_path, pinned)
+            record["task_checksum"] = task_checksum()
+            write_json(record_path, record)
+            target = "/app/steps/authenticate/tests/test_behavior.py"
+            trajectory = trial / f"steps/{STEPS[1]}/agent/trajectory.json"
+            atif = json.loads(trajectory.read_text())
+            atif["steps"][-1]["file_edits"].append(
+                {"path": target, "principal": {"id": "agent-b"}}
+            )
+            write_json(trajectory, atif)
+            stream = trial / f"steps/{STEPS[1]}/agent/codex.txt"
+            events = [json.loads(line) for line in stream.read_text().splitlines()]
+            events[-1]["item"]["changes"].append(
+                {"path": target, "kind": "update", "principal": {"id": "agent-b"}}
+            )
+            write_json(stream, events, lines=True)
+            with self.assertRaisesRegex(ValueError, "verifier"):
+                audit_campaign([job], receipt=True)
 
     def test_instruction_must_match_and_must_not_contain_the_proposal(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -362,6 +518,12 @@ class ReuseEvidence(unittest.TestCase):
             write_json(trajectory, atif)
             with self.assertRaisesRegex(ValueError, "overlap"):
                 audit_campaign([job], overlap_threshold=0.2)
+            proposal["claim"] = atif["steps"][0]["message"] + " " + " ".join(
+                f"padding{index}" for index in range(300)
+            )
+            write_json(trial / "environment/product/proposals.json", [proposal])
+            with self.assertRaisesRegex(ValueError, "overlap"):
+                audit_campaign([job])
 
     def test_duplicate_capture_is_one_effect_only(self):
         with tempfile.TemporaryDirectory() as directory:

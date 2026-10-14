@@ -8,7 +8,7 @@ import unittest
 
 from score_job import score_job
 from score_reuse import score_campaign
-from test_check_reuse_job import STEPS, make_job, write_json
+from test_check_reuse_job import STEPS, make_job, task_checksum, write_json
 
 
 def setup_phases(trial, arm, steps=STEPS):
@@ -69,6 +69,7 @@ def retask_as_deduplication(trial, arm):
     new_steps = ("accounts", "emails")
     record = json.loads((trial / "result.json").read_text())
     record["task_name"] = "agora/cross-session-deduplication-reuse"
+    record["task_checksum"] = task_checksum("cross-session-deduplication-reuse")
     for stage, name in zip(record["step_results"], new_steps, strict=True):
         stage["step_name"] = name
     write_json(trial / "result.json", record)
@@ -81,10 +82,18 @@ def retask_as_deduplication(trial, arm):
             / f"evals/cross-session-deduplication-reuse/steps/{new}/instruction.md"
         ).read_text()
         if new == new_steps[1]:
-            value["steps"][-1]["file_edits"] = ["/app/src/recordkit/canonical.py"]
+            value["steps"][-1]["file_edits"] = [
+                {
+                    "path": "/app/src/recordkit/canonical.py",
+                    "principal": {"id": "agent-b"},
+                }
+            ]
         write_json(atif, value)
     if arm == "agora":
         product = trial / "environment/product"
+        pins = json.loads((product / "pins.json").read_text())
+        pins["task_checksum"] = record["task_checksum"]
+        write_json(product / "pins.json", pins)
         principals = json.loads((product / "principals.json").read_text())
         principals["steps"] = dict(zip(new_steps, principals["steps"].values(), strict=True))
         write_json(product / "principals.json", principals)
@@ -99,6 +108,15 @@ def retask_as_deduplication(trial, arm):
 
 
 class ReuseScoring(unittest.TestCase):
+    def test_methodology_only_claims_scores_from_supplied_jobs(self):
+        methodology = (
+            Path(__file__).resolve().parents[1] / "docs/methodology.md"
+        ).read_text()
+        self.assertIn(
+            "`completion-efficiency-v1` mean recomputed from the supplied jobs",
+            methodology,
+        )
+
     def test_raw_dimensions_pair_costs_and_existing_composite(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
