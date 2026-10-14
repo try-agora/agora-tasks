@@ -91,6 +91,39 @@ Harbor's usage. Otherwise their cost is unmeasured, and the composite is not a c
 end-to-end efficiency comparison. Include capture work from the first stage as well as
 later retrieval; reporting only a cheap second stage would hide memory's acquisition cost.
 
+## Product capture→reuse
+
+`scripts/check_reuse_job.py` audits the version 1 evidence tree without starting a
+container or model. It fails closed on incomplete or mixed pins, reused principals,
+cross-step calls, unsettled capture jobs, non-human acceptance, instruction changes,
+duplicate cursor effects, failed verification, and missing semantic review. A receipt
+requires `executor: "ported"` and `accept: "person"`. Other runs are labeled
+`plumbing`; every verdict prints the acceptance policy.
+
+A reuse event joins four records: a claim accepted by a person, a completed retrieval
+by the second agent principal, the corresponding call-log row, and a later edit to a
+repository file cited by the claim. An explicit claim identifier in the final message
+or edit is reported as `cited`, but is not required. The checker writes `review.md`
+with the claim, message context, and edited files. The event remains `pending-review`
+until `review.json` names a reviewer, an `applies` verdict, and a time.
+
+`scripts/score_reuse.py` emits the separate `capture-reuse-v1` scorecard. Each task and
+arm cell reports its denominator and these raw dimensions:
+
+- verified, pending-review, and absent reuse events;
+- second-step tool calls, shell executions, and files read;
+- first-plus-second-step agent tokens, second-step tokens, and product input plus
+  output tokens;
+- agent, capture, acceptance, and human-wait seconds; and
+- the unchanged `completion-efficiency-v1` mean.
+
+Tokens saved are the matched baseline mean for both steps minus the product-arm mean
+for both steps and product-side usage. A `source: "fixture"` usage record contributes
+zero and is labeled in its cell. Missing product usage yields a null product composite
+and a nonzero exit; a missing matched baseline suppresses tokens saved. Protocol mode
+requires the declared 12 unique one-trial jobs for two tasks, two arms, and three
+attempts, and refuses retries rather than imputing them.
+
 ## Comparing tools
 
 Hold task revision, agent version, model, budgets, network access, and repetitions fixed.

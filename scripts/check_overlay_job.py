@@ -44,14 +44,25 @@ def check_setup(trial, result):
     names = [stage["step_name"] for stage in stages]
     require(len(names) == len(set(names)), "Duplicate step results")
     phases = events(trial / "environment/setup.jsonl")
-    expected = [("common", None), ("install", None)] + [
-        ("index", name) for name in (names or [None])
-    ]
+    require(bool(phases), "Missing setup phases")
+    arm = phases[0]["arm"]
+    if arm == "agora" and len(names) == 2:
+        expected = [
+            ("common", None),
+            ("install", None),
+            ("index", names[0]),
+            ("capture", names[0]),
+            ("accept", names[1]),
+            ("index", names[1]),
+        ]
+    else:
+        expected = [("common", None), ("install", None)] + [
+            ("index", name) for name in (names or [None])
+        ]
     require(
         [(p["phase"], p.get("step")) for p in phases] == expected,
         "Missing, repeated, or reordered setup phases",
     )
-    arm = phases[0]["arm"]
     previous = instant(result["environment_setup"]["started_at"])
     env_end = instant(result["environment_setup"]["finished_at"])
     readiness = {}
@@ -70,8 +81,23 @@ def check_setup(trial, result):
         )
         previous = end
         name = phase.get("step")
-        if phase["phase"] != "index" or not stages:
+        if phase["phase"] in ("common", "install") or not stages:
             require(end <= env_end, "Initial setup extends beyond environment setup")
+        if phase["phase"] == "capture":
+            require(
+                start >= instant(stages[0]["agent_execution"]["finished_at"]),
+                "Capture precedes step 1 agent completion",
+            )
+            verifier_start = stages[0].get("verifier", {}).get("started_at")
+            require(
+                verifier_start is None or end <= instant(verifier_start),
+                "Capture overlaps step 1 verification",
+            )
+        if phase["phase"] == "accept":
+            require(
+                start >= instant(stages[0]["verifier"]["finished_at"]),
+                "Acceptance precedes step 1 verification",
+            )
         if phase["phase"] == "index":
             logs = trial / "environment"
             if name is not None:
