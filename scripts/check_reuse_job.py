@@ -52,6 +52,7 @@ READ_ONLY_RETRIEVAL_TOOLS = {
     "trace_graph",
     "traverse_knowledge",
 }
+TOKEN_COVERAGE_FLOOR = 5
 
 
 def require(condition, message):
@@ -342,16 +343,6 @@ def stream_edits(stream, after, principal):
     return edited_paths(items, principal), items
 
 
-def atif_edits_after_retrieval(atif, claim_id, principal):
-    steps = atif.get("steps") or []
-    for index, step in enumerate(steps):
-        raw = json.dumps(step, sort_keys=True)
-        if claim_id in raw and "recall" in raw:
-            later = steps[index + 1 :]
-            return edited_paths(later, principal), later
-    return set(), []
-
-
 def tokens(value):
     return re.findall(r"[a-z0-9_./:-]+", value.lower())
 
@@ -371,6 +362,12 @@ def overlap(left, right, size=5):
     )
 
 
+def token_coverage(left, right):
+    instruction = set(tokens(left))
+    shared = instruction & set(tokens(right))
+    return len(shared), len(shared) / len(instruction) if instruction else 0
+
+
 def check_instruction(task, step, atif, proposals, threshold):
     expected = (ROOT / f"evals/{task}/steps/{step}/instruction.md").read_text()
     instruction = task_instruction(atif)
@@ -378,9 +375,11 @@ def check_instruction(task, step, atif, proposals, threshold):
     for proposal in proposals:
         text = proposal.get("claim")
         if isinstance(text, str) and text:
+            shared, coverage = token_coverage(instruction, text)
             require(
-                overlap(instruction, text) < threshold,
-                "Step 2 instruction exceeds the declared proposal overlap threshold",
+                overlap(instruction, text) < threshold
+                and (shared < TOKEN_COVERAGE_FLOOR or coverage < threshold),
+                "Step 2 instruction exceeds the proposal overlap or token-coverage threshold",
             )
 
 
@@ -516,10 +515,7 @@ def audit_trial(trial, *, receipt=False, overlap_threshold=0.5):
         ]
         require(bool(matching_calls), "Retrieved claim is missing from the step 2 call log")
         claim = claims[retrieved]
-        stream_paths, stream_evidence = stream_edits(stream, retrieval_index, agents[1])
-        atif_paths, atif_evidence = atif_edits_after_retrieval(atif, retrieved, agents[1])
-        edits = stream_paths | atif_paths
-        edit_evidence = stream_evidence + atif_evidence
+        edits, edit_evidence = stream_edits(stream, retrieval_index, agents[1])
         explicit_ids = [retrieved, claim.get("artifact_id")]
         cited = any(value and value in final for value in explicit_ids)
         edit_context = json.dumps(edit_evidence, sort_keys=True)

@@ -3,6 +3,7 @@
 from copy import deepcopy
 import json
 from pathlib import Path
+import re
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -320,14 +321,6 @@ class ReuseEvidence(unittest.TestCase):
             self.assertEqual(report["trials"][0]["reuse"], "pending-review")
             self.assertFalse(report["trials"][0]["cited"])
             review = trial / "environment/product/review.md"
-            self.assertFalse(review.exists())
-            self.assertEqual(report["written_files"], [])
-            self.assertEqual(report["trials"][0]["review"]["suggested_path"], str(review))
-            self.assertIn("claim-1", report["trials"][0]["review"]["template"])
-            output = Path(directory) / "review.md"
-            report = audit_campaign([job], receipt=True, review_output=output)
-            self.assertEqual(report["written_files"], [str(output)])
-            self.assertIn("claim-1", output.read_text())
             write_json(
                 review.with_suffix(".json"),
                 {
@@ -340,6 +333,32 @@ class ReuseEvidence(unittest.TestCase):
                 audit_campaign([job], receipt=True)["trials"][0]["reuse"],
                 "verified",
             )
+
+    def test_checker_writes_nothing_unannounced(self):
+        with tempfile.TemporaryDirectory() as directory:
+            job, trial = make_job(Path(directory))
+            before = {
+                path.relative_to(trial): path.read_bytes()
+                for path in trial.rglob("*")
+                if path.is_file()
+            }
+            report = audit_campaign([job], receipt=True)
+            after = {
+                path.relative_to(trial): path.read_bytes()
+                for path in trial.rglob("*")
+                if path.is_file()
+            }
+            self.assertEqual(after, before)
+            self.assertEqual(report["written_files"], [])
+            review = report["trials"][0]["review"]
+            self.assertEqual(
+                review["suggested_path"], str(trial / "environment/product/review.md")
+            )
+
+            output = Path(directory) / "review.md"
+            report = audit_campaign([job], receipt=True, review_output=output)
+            self.assertEqual(report["written_files"], [str(output)])
+            self.assertEqual(output.read_text(), review["template"])
 
     def test_job_summary_validity_flags_are_required(self):
         cases = (
@@ -495,6 +514,12 @@ class ReuseEvidence(unittest.TestCase):
             stream = trial / f"steps/{STEPS[1]}/agent/codex.txt"
             events = [json.loads(line) for line in stream.read_text().splitlines()]
             write_json(stream, list(reversed(events)), lines=True)
+            trajectory = trial / f"steps/{STEPS[1]}/agent/trajectory.json"
+            atif = json.loads(trajectory.read_text())
+            atif["steps"].insert(
+                1, {"source": "agent", "message": "recall claim-1 before editing"}
+            )
+            write_json(trajectory, atif)
             self.assertEqual(
                 audit_campaign([job])["trials"][0]["reuse"],
                 "retrieved-unapplied",
@@ -505,7 +530,9 @@ class ReuseEvidence(unittest.TestCase):
             job, trial = make_job(Path(directory))
             trajectory = trial / f"steps/{STEPS[1]}/agent/trajectory.json"
             atif = json.loads(trajectory.read_text())
-            atif["steps"][-1]["file_edits"][0]["principal"]["id"] = "agent-c"
+            atif["steps"].insert(
+                1, {"source": "agent", "message": "recall claim-1 before editing"}
+            )
             write_json(trajectory, atif)
             stream = trial / f"steps/{STEPS[1]}/agent/codex.txt"
             events = [json.loads(line) for line in stream.read_text().splitlines()]
@@ -631,6 +658,32 @@ class ReuseEvidence(unittest.TestCase):
             write_json(trial / "environment/product/proposals.json", [proposal])
             with self.assertRaisesRegex(ValueError, "overlap"):
                 audit_campaign([job])
+
+    def test_instruction_token_coverage_catches_fragmented_disclosure(self):
+        with tempfile.TemporaryDirectory() as directory:
+            job, trial = make_job(Path(directory))
+            trajectory = json.loads(
+                (trial / f"steps/{STEPS[1]}/agent/trajectory.json").read_text()
+            )
+            words = re.findall(
+                r"[a-z0-9_./:-]+", trajectory["steps"][0]["message"].lower()
+            )
+            proposal_path = trial / "environment/product/proposals.json"
+            proposal = json.loads(proposal_path.read_text())[0]
+            proposal["claim"] = " ".join(
+                " ".join(words[index : index + 4]) + f" separator{index // 4}"
+                for index in range(0, len(words), 4)
+            )
+            write_json(proposal_path, [proposal])
+            with self.assertRaisesRegex(ValueError, "overlap"):
+                audit_campaign([job], receipt=True)
+
+            proposal["claim"] = " ".join(dict.fromkeys(words[:4]))
+            write_json(proposal_path, [proposal])
+            self.assertEqual(
+                audit_campaign([job], receipt=True)["trials"][0]["reuse"],
+                "pending-review",
+            )
 
     def test_duplicate_capture_is_one_effect_only(self):
         with tempfile.TemporaryDirectory() as directory:

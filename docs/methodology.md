@@ -111,10 +111,20 @@ come from the unchanged verifier.
 A reuse event joins four records: a claim accepted by a person, a completed retrieval
 by the second agent principal whose result contains that claim, the successful call-log
 row with the same call identity and principal, and a later edit by that principal to a
-repository file cited by the claim. An explicit claim identifier in the final message
-or edit is reported as `cited`, but is not required. Proposal disclosure uses five-token
-shingle containment relative to the shorter text and rejects values at or above 0.5, so
-padding cannot dilute a copied instruction.
+repository file cited by the claim. The second session's native event stream decides
+the retrieval identity, strict retrieval-before-edit order, edited file, and principal;
+both events must occur in that stream and name the declared second principal. The call
+log corroborates the retrieval identity, principal, credential class, tool, result,
+outcome, and session window. The trajectory supplies the exact instruction and final
+message for citation reporting, never join order or binding. An explicit claim identifier
+in the final message or native edit is reported as `cited`, but is not required.
+
+At the default threshold, proposal disclosure rejects when either of two measures reaches
+0.5: five-token shingle containment relative to the shorter text, or the share of the
+instruction's distinct tokens that appear anywhere in the proposal. The unordered measure
+requires at least five shared distinct tokens, so a short instruction or a few incidental
+common words do not fail by ratio alone. Shingle containment still catches contiguous
+copying, while distinct-token coverage catches reordered fragments and padding.
 
 Retrieval tools are the served catalog's read-only set: `affected_graph`,
 `explain_graph`, `explore_graph`, `graph_status`, `list_calls`, `list_documents`,
@@ -147,6 +157,11 @@ zero and is labeled in its cell. Missing product usage yields a null product com
 and a nonzero exit; a missing matched baseline suppresses tokens saved. Protocol mode
 requires the declared 12 unique one-trial jobs for two tasks, two arms, and three
 attempts, and refuses retries rather than imputing them.
+
+Verification counts are copied from these suite commands at this revision:
+
+- `uv run python -m unittest discover -s scripts -p 'test_*.py'` printed `Ran 41 tests`.
+- `uv run python scripts/check.py` printed `Validated 25 tasks; 81 verifier scenarios`.
 
 ## Comparing tools
 
