@@ -16,6 +16,55 @@ from check_overlay_job import check_setup
 ROOT = Path(__file__).resolve().parents[1]
 TASK = "cross-session-framework-reuse"
 STEPS = ("rate-limit", "authenticate")
+READ_ONLY_TOOLS = {
+    "affected_graph",
+    "explain_graph",
+    "explore_graph",
+    "graph_status",
+    "list_calls",
+    "list_documents",
+    "list_knowledge",
+    "list_repository_tree",
+    "path_graph",
+    "query_graph",
+    "read_document",
+    "read_implementation",
+    "read_implementation_graph",
+    "read_plan",
+    "read_reference",
+    "read_repository_file",
+    "recall_memory",
+    "trace_graph",
+    "traverse_knowledge",
+}
+MUTATING_TOOLS = {
+    "anchor_plan",
+    "archive_document",
+    "ask_plan",
+    "attach_artifact",
+    "block_task",
+    "build_graph",
+    "capture_knowledge",
+    "claim_job",
+    "complete_job",
+    "complete_task",
+    "create_document",
+    "edit_implementation_graph",
+    "edit_plan",
+    "fail_job",
+    "heartbeat_job",
+    "ingest",
+    "propose",
+    "refresh_graph",
+    "rename_document",
+    "report_pr",
+    "report_progress",
+    "report_verification",
+    "request_revision",
+    "restore_document",
+    "start_implementation",
+    "start_task",
+}
 TIMES = {
     "rate-limit": ("2026-10-14T00:00:10+00:00", "2026-10-14T00:00:20+00:00"),
     "authenticate": ("2026-10-14T00:00:30+00:00", "2026-10-14T00:00:40+00:00"),
@@ -86,11 +135,15 @@ def make_job(root, name="job-1", *, executor="ported", accept="person"):
         job / "result.json",
         {
             "job_name": name,
+            "started_at": "2026-10-14T00:00:00+00:00",
             "finished_at": "2026-10-14T00:01:00+00:00",
             "n_total_trials": 1,
             "stats": {
                 "n_completed_trials": 1,
                 "n_errored_trials": 0,
+                "n_running_trials": 0,
+                "n_pending_trials": 0,
+                "n_cancelled_trials": 0,
                 "n_retries": 0,
             },
         },
@@ -267,7 +320,14 @@ class ReuseEvidence(unittest.TestCase):
             self.assertEqual(report["trials"][0]["reuse"], "pending-review")
             self.assertFalse(report["trials"][0]["cited"])
             review = trial / "environment/product/review.md"
-            self.assertIn("claim-1", review.read_text())
+            self.assertFalse(review.exists())
+            self.assertEqual(report["written_files"], [])
+            self.assertEqual(report["trials"][0]["review"]["suggested_path"], str(review))
+            self.assertIn("claim-1", report["trials"][0]["review"]["template"])
+            output = Path(directory) / "review.md"
+            report = audit_campaign([job], receipt=True, review_output=output)
+            self.assertEqual(report["written_files"], [str(output)])
+            self.assertIn("claim-1", output.read_text())
             write_json(
                 review.with_suffix(".json"),
                 {
@@ -280,6 +340,53 @@ class ReuseEvidence(unittest.TestCase):
                 audit_campaign([job], receipt=True)["trials"][0]["reuse"],
                 "verified",
             )
+
+    def test_job_summary_validity_flags_are_required(self):
+        cases = (
+            ("finished_at", None, "finished"),
+            ("n_completed_trials", 0, "completed"),
+            ("n_errored_trials", 1, "infrastructure"),
+            ("n_running_trials", 1, "partial"),
+            ("n_pending_trials", 1, "partial"),
+            ("n_cancelled_trials", 1, "partial"),
+            ("n_retries", 1, "retried"),
+        )
+        for field, value, message in cases:
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as directory:
+                job, _ = make_job(Path(directory))
+                summary = json.loads((job / "result.json").read_text())
+                target = summary if field == "finished_at" else summary["stats"]
+                target[field] = value
+                write_json(job / "result.json", summary)
+                with self.assertRaisesRegex(ValueError, message):
+                    audit_campaign([job], receipt=True)
+
+    def test_only_catalog_reads_can_retrieve_claims(self):
+        self.assertEqual(len(READ_ONLY_TOOLS), 19)
+        self.assertEqual(len(MUTATING_TOOLS), 26)
+        self.assertFalse(READ_ONLY_TOOLS & MUTATING_TOOLS)
+        cases = [(name, True) for name in sorted(READ_ONLY_TOOLS)]
+        cases += [(name, False) for name in sorted(MUTATING_TOOLS)]
+        cases += [("accept_proposal", False), ("unknown_tool", False)]
+        for tool, allowed in cases:
+            with self.subTest(tool=tool), tempfile.TemporaryDirectory() as directory:
+                job, trial = make_job(Path(directory))
+                stream = trial / f"steps/{STEPS[1]}/agent/codex.txt"
+                events = [json.loads(line) for line in stream.read_text().splitlines()]
+                events[0]["item"]["tool"] = tool
+                write_json(stream, events, lines=True)
+                calls = trial / "environment/product/calls.jsonl"
+                rows = [json.loads(line) for line in calls.read_text().splitlines()]
+                rows[-1]["tool"] = tool
+                write_json(calls, rows, lines=True)
+                if allowed:
+                    self.assertEqual(
+                        audit_campaign([job], receipt=True)["trials"][0]["reuse"],
+                        "pending-review",
+                    )
+                else:
+                    with self.assertRaisesRegex(ValueError, "read-only retrieval"):
+                        audit_campaign([job], receipt=True)
 
     def test_pins_are_complete_consistent_and_match_the_trial(self):
         with tempfile.TemporaryDirectory() as directory:

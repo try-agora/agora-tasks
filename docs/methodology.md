@@ -102,6 +102,11 @@ Other runs are labeled `plumbing`; every verdict prints the acceptance policy. A
 class comes from each call principal's credential source: `session` is human, while
 `bearer` and `turn` are agents. The checker recomputes the suite task checksum, covering
 the verifier filenames and bytes, and rejects every recorded edit under a verifier path.
+It also requires ordered job `started_at` and `finished_at` values, the declared
+`n_total_trials`, and all six progress counters: `n_completed_trials` must equal the
+total, while `n_errored_trials`, `n_running_trials`, `n_pending_trials`,
+`n_cancelled_trials`, and `n_retries` must be zero. The final step's reward must still
+come from the unchanged verifier.
 
 A reuse event joins four records: a claim accepted by a person, a completed retrieval
 by the second agent principal whose result contains that claim, the successful call-log
@@ -109,9 +114,22 @@ row with the same call identity and principal, and a later edit by that principa
 repository file cited by the claim. An explicit claim identifier in the final message
 or edit is reported as `cited`, but is not required. Proposal disclosure uses five-token
 shingle containment relative to the shorter text and rejects values at or above 0.5, so
-padding cannot dilute a copied instruction. The checker writes `review.md` with the
-claim, message context, and edited files. The event remains `pending-review` until
-`review.json` names a reviewer, an `applies` verdict, and a time.
+padding cannot dilute a copied instruction.
+
+Retrieval tools are the served catalog's read-only set: `affected_graph`,
+`explain_graph`, `explore_graph`, `graph_status`, `list_calls`, `list_documents`,
+`list_knowledge`, `list_repository_tree`, `path_graph`, `query_graph`, `read_document`,
+`read_implementation`, `read_implementation_graph`, `read_plan`, `read_reference`,
+`read_repository_file`, `recall_memory`, `trace_graph`, and `traverse_knowledge`.
+Mutating and unknown tool names fail closed even when their results carry an accepted
+claim.
+
+For an applied claim, the JSON includes a review template and its suggested
+evidence-tree path. The checker does not write that path by default. Pass
+`--review-output PATH` to write the single generated template to a caller-chosen path;
+`written_files` lists every path written and is otherwise empty. The event remains
+`pending-review` until the evidence tree already contains `review.json` naming a
+reviewer, an `applies` verdict, and a time.
 
 `scripts/score_reuse.py` emits the separate `capture-reuse-v1` scorecard. Each task and
 arm cell reports its denominator and these raw dimensions:

@@ -31,6 +31,27 @@ PIN_VALUES = {
     "executor": {"fixture-v1", "ported"},
     "accept": {"person", "scripted-console-v1"},
 }
+READ_ONLY_RETRIEVAL_TOOLS = {
+    "affected_graph",
+    "explain_graph",
+    "explore_graph",
+    "graph_status",
+    "list_calls",
+    "list_documents",
+    "list_knowledge",
+    "list_repository_tree",
+    "path_graph",
+    "query_graph",
+    "read_document",
+    "read_implementation",
+    "read_implementation_graph",
+    "read_plan",
+    "read_reference",
+    "read_repository_file",
+    "recall_memory",
+    "trace_graph",
+    "traverse_knowledge",
+}
 
 
 def require(condition, message):
@@ -67,10 +88,35 @@ def expand_jobs(paths):
 def trials(job):
     summary = load_json(job / "result.json")
     paths = sorted(job.glob("*/result.json"))
+    started = parse_time(summary.get("started_at"), f"{job}: job has invalid started_at")
+    finished = parse_time(summary.get("finished_at"), f"{job}: job is unfinished")
+    require(started <= finished, f"{job}: job has invalid finished_at")
+    total = summary.get("n_total_trials")
     require(
-        bool(paths) and len(paths) == summary.get("n_total_trials"),
+        type(total) is int and total > 0 and len(paths) == total,
         f"{job}: trial count disagrees with job summary",
     )
+    stats = summary.get("stats")
+    require(isinstance(stats, dict), f"{job}: missing job summary stats")
+    counts = {}
+    for field in (
+        "n_completed_trials",
+        "n_errored_trials",
+        "n_running_trials",
+        "n_pending_trials",
+        "n_cancelled_trials",
+        "n_retries",
+    ):
+        value = stats.get(field)
+        require(type(value) is int and value >= 0, f"{job}: invalid {field}")
+        counts[field] = value
+    require(counts["n_completed_trials"] == total, f"{job}: job has incomplete completed trials")
+    require(counts["n_errored_trials"] == 0, f"{job}: job has infrastructure errors")
+    require(
+        not any(counts[field] for field in ("n_running_trials", "n_pending_trials", "n_cancelled_trials")),
+        f"{job}: job is partial, running, pending, or cancelled",
+    )
+    require(counts["n_retries"] == 0, f"{job}: retried jobs are invalid receipt evidence")
     return summary, paths
 
 
@@ -367,8 +413,8 @@ def reward(stage):
     return ((stage.get("verifier_result") or {}).get("rewards") or {}).get("reward")
 
 
-def write_review(product, claim_id, claim, context, edits, evidence):
-    body = (
+def review_template(claim_id, claim, context, edits, evidence):
+    return (
         "# Capture-to-reuse review\n\n"
         f"Claim: `{claim_id}`\n\n"
         f"{claim.get('claim', '')}\n\n"
@@ -380,7 +426,6 @@ def write_review(product, claim_id, claim, context, edits, evidence):
         + json.dumps(evidence, indent=2, sort_keys=True)
         + "\n```\n"
     )
-    (product / "review.md").write_text(body)
 
 
 def review_applies(product):
@@ -435,6 +480,10 @@ def audit_trial(trial, *, receipt=False, overlap_threshold=0.5):
         raw = json.dumps(item.get("result"), sort_keys=True)
         for claim_id in claims:
             if claim_id in raw:
+                require(
+                    item.get("tool") in READ_ONLY_RETRIEVAL_TOOLS,
+                    "Claim-bearing call is not a catalog read-only retrieval",
+                )
                 retrieved, retrieval, retrieval_index = claim_id, item, index
                 break
         if retrieved:
@@ -443,6 +492,7 @@ def audit_trial(trial, *, receipt=False, overlap_threshold=0.5):
     final = last_agent_message(atif)
     edits = set()
     edit_evidence = []
+    review = None
     status, cited = "absent", False
     if retrieved:
         stage_2_start = parse_time(
@@ -480,7 +530,10 @@ def audit_trial(trial, *, receipt=False, overlap_threshold=0.5):
         elif reward(stages[1]) != 1:
             status = "failed-verifier"
         else:
-            write_review(product, retrieved, claim, final, edits, edit_evidence)
+            review = {
+                "suggested_path": str(product / "review.md"),
+                "template": review_template(retrieved, claim, final, edits, edit_evidence),
+            }
             status = "verified" if review_applies(product) else "pending-review"
 
     return {
@@ -492,11 +545,12 @@ def audit_trial(trial, *, receipt=False, overlap_threshold=0.5):
         "reuse": status,
         "claim_id": retrieved,
         "cited": cited,
+        "review": review,
         "pins": pins,
     }
 
 
-def audit_campaign(paths, *, receipt=False, overlap_threshold=0.5):
+def audit_campaign(paths, *, receipt=False, overlap_threshold=0.5, review_output=None):
     require(0 <= overlap_threshold <= 1, "Overlap threshold must be between zero and one")
     reports = []
     campaign_pins = None
@@ -519,11 +573,19 @@ def audit_campaign(paths, *, receipt=False, overlap_threshold=0.5):
     policies = {report["accept"] for report in reports}
     classifications = {report["classification"] for report in reports}
     require(len(policies) == 1 and len(classifications) == 1, "Campaign has mixed verdict policy")
+    written_files = []
+    if review_output is not None:
+        reviews = [report["review"] for report in reports if report["review"] is not None]
+        require(len(reviews) == 1, "--review-output requires exactly one review template")
+        output = Path(review_output)
+        output.write_text(reviews[0]["template"])
+        written_files.append(str(output))
     return {
         "evidence_version": "capture-reuse-v1",
         "accept": policies.pop(),
         "classification": classifications.pop(),
         "receipt": receipt,
+        "written_files": written_files,
         "trials": reports,
     }
 
@@ -533,11 +595,13 @@ def main(argv=None):
     parser.add_argument("directories", nargs="+", type=Path)
     parser.add_argument("--receipt", action="store_true")
     parser.add_argument("--overlap-threshold", type=float, default=0.5)
+    parser.add_argument("--review-output", type=Path)
     args = parser.parse_args(argv)
     report = audit_campaign(
         args.directories,
         receipt=args.receipt,
         overlap_threshold=args.overlap_threshold,
+        review_output=args.review_output,
     )
     print(json.dumps(report, indent=2, allow_nan=False))
     return 0
